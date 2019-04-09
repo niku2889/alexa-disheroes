@@ -61,7 +61,7 @@ function log() {
 app.post('/comparethecarpart', requestVerifier, function (req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
-    res.json(getNewHero());
+    res.json(getRegDetails(''));
     isFisrtTime = false
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
@@ -127,7 +127,8 @@ function getNewHero() {
 
 function getRegDetails(intentDetails) {
   console.log(intentDetails.slots.registrationnumber.value)
-  VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
+  var tes= 'w111bop';
+  VrmReg.find({ regno: tes })
     .then(data => {
       console.log(data)
       var welcomeSpeechOutput = 'Your vehicle is ' + data[0].model + ' ' + data[0].engine + ' <break time="0.3s" />';
