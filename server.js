@@ -126,7 +126,7 @@ function getNewHero() {
 }
 
 function getRegDetails(intentDetails) {
-  console.log(intentDetails.slots.registrationnumber.value)
+  //console.log(intentDetails.slots.registrationnumber.value)
   var tes= 'w111bop';
   VrmReg.find({ regno: tes })
     .then(data => {
