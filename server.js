@@ -130,7 +130,7 @@ function getRegDetails(intentDetails) {
   VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
     .then(data => {
       console.log(data)
-      var welcomeSpeechOutput = 'Your vehicle is' + data.model + ' ' + data.engine + '<break time="0.3s" />';
+      var welcomeSpeechOutput = 'Your vehicle is' + data[0].model + ' ' + data[0].engine + '<break time="0.3s" />';
       const speechOutput = welcomeSpeechOutput;
       return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
     }).catch(err => {
