@@ -4,7 +4,7 @@ let express = require('express'),
   app = express();
 let alexaVerifier = require('alexa-verifier');
 var isFisrtTime = true;
-const SKILL_NAME = 'Disney Heroes';
+const SKILL_NAME = 'Compare The Car Part';
 const GET_HERO_MESSAGE = "Here's your hero: ";
 const HELP_MESSAGE = 'You can say please fetch me a hero, or, you can say exit... What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
@@ -55,7 +55,7 @@ function log() {
   }
 }
 
-app.post('/disneyheroes', requestVerifier, function(req, res) {
+app.post('/comparethecarpart', requestVerifier, function(req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getNewHero());
@@ -101,7 +101,7 @@ function help() {
 
 function getNewHero() {
 
-  var welcomeSpeechOutput = 'Welcome to Disney heroes<break time="0.3s" />'
+  var welcomeSpeechOutput = 'Welcome to compare the car part dot com.Please tell me your vehicle registration number<break time="0.3s" />'
   if (!isFisrtTime) {
     welcomeSpeechOutput = '';
   }
