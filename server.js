@@ -55,7 +55,7 @@ function log() {
   }
 }
 
-app.post('/comparethecarpart', requestVerifier, function(req, res) {
+app.post('/comparethecarpart', requestVerifier, function (req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getNewHero());
@@ -64,6 +64,9 @@ app.post('/comparethecarpart', requestVerifier, function(req, res) {
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
+      case 'VehicleDetailsIntent':
+        res.json(getRegDetails());
+        break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
         break;
@@ -102,20 +105,32 @@ function help() {
 function getNewHero() {
 
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com.Please tell me your vehicle registration number<break time="0.3s" />'
-  if (!isFisrtTime) {
-    welcomeSpeechOutput = '';
-  }
+  // if (!isFisrtTime) {
+  //   welcomeSpeechOutput = '';
+  // }
 
   const heroArr = data;
   const heroIndex = Math.floor(Math.random() * heroArr.length);
   const randomHero = heroArr[heroIndex];
   const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
-  const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
-  const more = MORE_MESSAGE
+  // const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
+   const more = MORE_MESSAGE
 
-
+  const speechOutput = welcomeSpeechOutput;
   return buildResponseWithRepromt(speechOutput, false, randomHero, more);
 
+}
+
+function getRegDetails() {
+  var welcomeSpeechOutput = 'Your vehicle is Audi A1<break time="0.3s" />';
+  const speechOutput = welcomeSpeechOutput;
+  const heroArr = data;
+  const heroIndex = Math.floor(Math.random() * heroArr.length);
+  const randomHero = heroArr[heroIndex];
+  const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
+  const more = MORE_MESSAGE
+
+  return buildResponseWithRepromt(speechOutput, false, randomHero, more);
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
