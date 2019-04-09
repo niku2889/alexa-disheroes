@@ -133,10 +133,10 @@ function getRegDetails(intentDetails) {
       var welcomeSpeechOutput = 'Your vehicle is ' + data[0].model + ' ' + data[0].engine + ' <break time="0.3s" />';
       const speechOutput = welcomeSpeechOutput;
       console.log(speechOutput)
-      return buildResponseWithRepromt(speechOutput, true, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
     }).catch(err => {
       const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
-      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
     });
 }
 
