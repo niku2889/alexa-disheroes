@@ -3,6 +3,8 @@ let express = require('express'),
   port = process.env.PORT || 3000,
   app = express();
 let alexaVerifier = require('alexa-verifier');
+let mongoose = require('mongoose');
+const VrmReg = require('./models/vrmReg.model.js');
 var isFisrtTime = true;
 const SKILL_NAME = 'Compare The Car Part';
 const GET_HERO_MESSAGE = "Here's your hero: ";
@@ -12,6 +14,7 @@ const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
 const MORE_MESSAGE = 'Do you want more?'
 const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
+let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
 
 const data = [
   'Aladdin  ',
@@ -110,29 +113,30 @@ function getNewHero() {
   //   welcomeSpeechOutput = '';
   // }
 
-  const heroArr = data;
-  const heroIndex = Math.floor(Math.random() * heroArr.length);
-  const randomHero = heroArr[heroIndex];
-  const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
+  // const heroArr = data;
+  // const heroIndex = Math.floor(Math.random() * heroArr.length);
+  // const randomHero = heroArr[heroIndex];
+  // const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
   // const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
-   const more = MORE_MESSAGE
+  // const more = MORE_MESSAGE
 
   const speechOutput = welcomeSpeechOutput;
-  return buildResponseWithRepromt(speechOutput, false, randomHero, more);
+  return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
 
 }
 
 function getRegDetails(intentDetails) {
-  console.log(intentDetails.slots.registrationnumber)
-  var welcomeSpeechOutput = 'Your vehicle is Audi A1<break time="0.3s" />';
-  const speechOutput = welcomeSpeechOutput;
-  const heroArr = data;
-  const heroIndex = Math.floor(Math.random() * heroArr.length);
-  const randomHero = heroArr[heroIndex];
-  const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
-  const more = MORE_MESSAGE
-
-  return buildResponseWithRepromt(speechOutput, false, randomHero, more);
+  console.log(intentDetails.slots.registrationnumber.value)
+  VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
+    .then(data => {
+      console.log(data)
+      var welcomeSpeechOutput = 'Your vehicle is' + data.model + ' ' + data.engine + '<break time="0.3s" />';
+      const speechOutput = welcomeSpeechOutput;
+      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+    }).catch(err => {
+      const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
+      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+    });
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
@@ -187,5 +191,33 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
 }
 
 app.listen(port);
+//Mongoose Configurations:
+mongoose.Promise = global.Promise;
 
+mongoose.connection.on('connected', () => {
+  console.log("DATABASE - Connected");
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log('DATABASE - Error');
+  console.log(err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('DATABASE - disconnected  Retrying....');
+});
+
+let connectDb = function () {
+  const dbOptions = {
+    poolSize: 5,
+    reconnectTries: Number.MAX_SAFE_INTEGER,
+    reconnectInterval: 500
+  };
+  mongoose.connect(dbURL, dbOptions)
+    .catch(err => {
+      console.log('DATABASE - Error');
+      console.log(err);
+    });
+};
+connectDb();
 console.log('Alexa list RESTful API server started on: ' + port);
