@@ -66,7 +66,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
     console.log(req.body.request)
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
-        res.json(getRegDetails());
+        res.json(getRegDetails(req.body.request.intent));
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -122,7 +122,8 @@ function getNewHero() {
 
 }
 
-function getRegDetails() {
+function getRegDetails(intentDetails) {
+  console.log(intentDetails.slots.registrationnumber)
   var welcomeSpeechOutput = 'Your vehicle is Audi A1<break time="0.3s" />';
   const speechOutput = welcomeSpeechOutput;
   const heroArr = data;
