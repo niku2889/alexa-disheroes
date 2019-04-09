@@ -63,6 +63,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
+    console.log(req.body.request)
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
         res.json(getRegDetails());
@@ -104,7 +105,7 @@ function help() {
 
 function getNewHero() {
 
-  var welcomeSpeechOutput = 'Welcome to compare the car part dot com.Please tell me your vehicle registration number<break time="0.3s" />'
+  var welcomeSpeechOutput = 'Welcome to compare the car part dot com Please tell me your vehicle registration number<break time="0.3s" />'
   // if (!isFisrtTime) {
   //   welcomeSpeechOutput = '';
   // }
