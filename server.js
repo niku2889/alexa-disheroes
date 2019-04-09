@@ -146,7 +146,7 @@ function buildResponse(speechText, shouldEndSession, cardText) {
   var jsonObj = {
     "version": "1.0",
     "response": {
-      "shouldEndSession": undefined,
+      "shouldEndSession": false,
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput
@@ -168,7 +168,7 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
   var jsonObj = {
     "version": "1.0",
     "response": {
-      "shouldEndSession": undefined,
+      "shouldEndSession": false,
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput
