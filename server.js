@@ -101,7 +101,7 @@ function help() {
 
   const speechOutput = HELP_MESSAGE
   const reprompt = HELP_REPROMPT
-  var jsonObj = buildResponseWithRepromt(speechOutput, false, "", reprompt);
+  var jsonObj = buildResponseWithRepromt(speechOutput, null, "", reprompt);
 
   return jsonObj;
 }
@@ -121,7 +121,7 @@ function getNewHero() {
   // const more = MORE_MESSAGE
 
   const speechOutput = welcomeSpeechOutput;
-  return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+  return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
 
 }
 
