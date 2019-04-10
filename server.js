@@ -164,7 +164,7 @@ async function getCategoryDetails(intentDetails) {
     var location = '';
     for (var i = 0; i < result.length; i++) {
       if (location.toString().toLowerCase().indexOf(result[i].location1.toString().toLowerCase()) == -1)
-        location += result[i].location1 + ' OR ' + PAUSE;
+        location += result[i].location1 + PAUSE;
     }
     var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
     const speechOutput = welcomeSpeechOutput;
