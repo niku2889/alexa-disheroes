@@ -150,8 +150,10 @@ async function getRegDetails(intentDetails) {
 }
 
 async function getCategoryDetails(intentDetails) {
+  console.log(ktype)
+  console.log(intentDetails.slots.categoryname.value)
   let promise = new Promise((resolve, reject) => {
-    Master.find({ kType: ktype, mainCategory: intentDetails.slots.categoryname.value }, { yinYangQ1: 1, location1: 1 })
+    Master.find({ kType: ktype, mainCategory: { $regex: intentDetails.slots.categoryname.value } }, { yinYangQ1: 1, location1: 1 })
       .then(uni => {
         resolve(uni);
       });
