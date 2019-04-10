@@ -153,7 +153,7 @@ async function getCategoryDetails(intentDetails) {
   console.log(ktype)
   console.log(intentDetails.slots.categoryname.value)
   let promise = new Promise((resolve, reject) => {
-    Master.find({ kType: ktype, mainCategory: { $regex: intentDetails.slots.categoryname.value } }, { yinYangQ1: 1, location1: 1 })
+    Master.find({ kType: ktype, mainCategory: intentDetails.slots.categoryname.value }, { yinYangQ1: 1, location1: 1, lapArtId: 1 })
       .then(uni => {
         resolve(uni);
       });
@@ -170,6 +170,10 @@ async function getCategoryDetails(intentDetails) {
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
   } else {
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
   }
 }
 
