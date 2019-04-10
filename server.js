@@ -61,7 +61,7 @@ function log() {
 app.post('/comparethecarpart', requestVerifier, function (req, res) {
 
   if (req.body.request.type === 'LaunchRequest') {
-    res.json(getRegDetails(''));
+    res.json(getWelcomeMsg());
     isFisrtTime = false
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
@@ -106,9 +106,9 @@ function help() {
   return jsonObj;
 }
 
-function getNewHero() {
+function getWelcomeMsg() {
 
-  var welcomeSpeechOutput = 'Welcome to compare the car part dot com Please tell me your vehicle registration number<break time="0.3s" />'
+  var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
   // if (!isFisrtTime) {
   //   welcomeSpeechOutput = '';
   // }
@@ -118,26 +118,26 @@ function getNewHero() {
   // const randomHero = heroArr[heroIndex];
   // const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
   // const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
-  // const more = MORE_MESSAGE
+  const more = 'Please tell me your vehicle registration number'
 
   const speechOutput = welcomeSpeechOutput;
-  return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
+  return buildResponseWithRepromt(speechOutput, false, "", more);
 
 }
 
 function getRegDetails(intentDetails) {
-  //console.log(intentDetails.slots.registrationnumber.value)
+  console.log(intentDetails.slots.registrationnumber.value)
   var tes= 'w111bop';
-  VrmReg.find({ regno: tes })
+  VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
     .then(data => {
       console.log(data)
       var welcomeSpeechOutput = 'Your vehicle is ' + data[0].model + ' ' + data[0].engine + ' <break time="0.3s" />';
       const speechOutput = welcomeSpeechOutput;
       console.log(speechOutput)
-      return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
     }).catch(err => {
       const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
-      return buildResponseWithRepromt(speechOutput, null, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
     });
 }
 
@@ -147,7 +147,7 @@ function buildResponse(speechText, shouldEndSession, cardText) {
   var jsonObj = {
     "version": "1.0",
     "response": {
-      "shouldEndSession": false,
+      "shouldEndSession": shouldEndSession,
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput
@@ -169,7 +169,7 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
   var jsonObj = {
     "version": "1.0",
     "response": {
-      "shouldEndSession": false,
+      "shouldEndSession": shouldEndSession,
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput
