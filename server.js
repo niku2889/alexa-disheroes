@@ -171,13 +171,11 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
       "shouldEndSession": shouldEndSession,
       "outputSpeech": {
         "type": "SSML",
-        "ssml": speechOutput
+        "ssml": speechOutput,
+        "text":speechText
       },
       "card": {
         "type": "Simple",
-        "title": SKILL_NAME,
-        "content": cardText,
-        "text": cardText
       }
     }
   }
