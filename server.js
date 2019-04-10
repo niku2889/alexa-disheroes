@@ -116,7 +116,7 @@ function getWelcomeMsg() {
   // const heroArr = data;
   // const heroIndex = Math.floor(Math.random() * heroArr.length);
   // const randomHero = heroArr[heroIndex];
-  const tempOutput = WHISPER + GET_HERO_MESSAGE + PAUSE;
+  const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE;
   const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = 'Please tell me your vehicle registration number'
 
@@ -138,6 +138,7 @@ function getRegDetails(intentDetails) {
       const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
     });
+  return buildResponseWithRepromt('Your vehicle is <break time="0.3s" />', false, "Over 1 million car parts available", HELP_REPROMPT);
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
