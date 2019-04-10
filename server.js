@@ -5,6 +5,7 @@ let express = require('express'),
 let alexaVerifier = require('alexa-verifier');
 let mongoose = require('mongoose');
 const VrmReg = require('./models/vrmReg.model.js');
+const Master = require('./models/master.model.js');
 var async = require('async');
 var isFisrtTime = true;
 const SKILL_NAME = 'Compare the car part';
@@ -12,7 +13,7 @@ const GET_HERO_MESSAGE = "Here's your hero: ";
 const HELP_MESSAGE = 'You can say please fetch me a hero, or, you can say exit... What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
-const MORE_MESSAGE = 'Would you like to tell me your vehicle registration number?'
+const MORE_MESSAGE = 'which category would you like?'
 const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
 let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
@@ -127,10 +128,22 @@ async function getRegDetails(intentDetails) {
       });
   });
   let result = await promise;
-  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE;
+  let promise1 = new Promise((resolve, reject) => {
+    Master.find({ kType: result[0].ktype }).distinct('mainCategory')
+      .then(uni => {
+        resolve(uni);
+      });
+  });
+  let result1 = await promise1;
+  var category = '';
+  for (var i = 0; i < result1.length; i++) {
+    category += result1[i] + PAUSE;
+  }
+  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
+    WHISPER + 'We have the following parts available' + PAUSE + category;
   const speechOutput = welcomeSpeechOutput;
 
-  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
+  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
@@ -166,19 +179,19 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
         "type": "SSML",
         "ssml": speechOutput,
         "text": speechText
-      },
-      "card": {
-        "type": "Simple",
-        "title": SKILL_NAME,
-        "content": cardText,
-        "text": cardText
-      },
-      "reprompt": {
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": reprompt,
-          "ssml": reprompt
-        }
+      }
+    }, 
+    "card": {
+      "type": "Simple",
+      "title": SKILL_NAME,
+      "content": cardText,
+      "text": cardText
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": reprompt,
+        "ssml": reprompt
       }
     }
   }
