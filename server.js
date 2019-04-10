@@ -5,6 +5,7 @@ let express = require('express'),
 let alexaVerifier = require('alexa-verifier');
 let mongoose = require('mongoose');
 const VrmReg = require('./models/vrmReg.model.js');
+var async = require('async');
 var isFisrtTime = true;
 const SKILL_NAME = 'Compare the car part';
 const GET_HERO_MESSAGE = "Here's your hero: ";
@@ -69,7 +70,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
     console.log(req.body.request)
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
-        res.json(getRegDetails(req.body.request.intent));
+        getRegDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -109,13 +110,7 @@ function help() {
 function getWelcomeMsg() {
 
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
-  // if (!isFisrtTime) {
-  //   welcomeSpeechOutput = '';
-  // }
 
-  // const heroArr = data;
-  // const heroIndex = Math.floor(Math.random() * heroArr.length);
-  // const randomHero = heroArr[heroIndex];
   const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE;
   const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = 'Please tell me your vehicle registration number'
@@ -124,20 +119,18 @@ function getWelcomeMsg() {
 
 }
 
-function getRegDetails(intentDetails) {
-  console.log(intentDetails.slots.registrationnumber.value)
-  var tes = 'w111bop';
-  VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
-    .then(data => {
-      console.log(data)
-      var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + data[0].model + ' ' + data[0].engine + PAUSE;
-      const speechOutput = welcomeSpeechOutput;
-      console.log(speechOutput)
-      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
-    }).catch(err => {
-      const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
-      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
-    });
+async function getRegDetails(intentDetails) {
+  let promise = new Promise((resolve, reject) => {
+    VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
+      .then(uni => {
+        resolve(uni);
+      });
+  });
+  let result = await promise;
+  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE;
+  const speechOutput = welcomeSpeechOutput;
+
+  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
@@ -172,10 +165,20 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput,
-        "text":speechText
+        "text": speechText
       },
       "card": {
         "type": "Simple",
+        "title": SKILL_NAME,
+        "content": cardText,
+        "text": cardText
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": reprompt,
+          "ssml": reprompt
+        }
       }
     }
   }
