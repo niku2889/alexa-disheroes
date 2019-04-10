@@ -6,12 +6,12 @@ let alexaVerifier = require('alexa-verifier');
 let mongoose = require('mongoose');
 const VrmReg = require('./models/vrmReg.model.js');
 var isFisrtTime = true;
-const SKILL_NAME = 'Compare The Car Part';
+const SKILL_NAME = 'Compare the car part';
 const GET_HERO_MESSAGE = "Here's your hero: ";
 const HELP_MESSAGE = 'You can say please fetch me a hero, or, you can say exit... What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
-const MORE_MESSAGE = 'Do you want more?'
+const MORE_MESSAGE = 'Would you like to tell me your vehicle registration number?'
 const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
 let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
@@ -121,7 +121,7 @@ function getWelcomeMsg() {
   const more = 'Please tell me your vehicle registration number'
 
   const speechOutput = welcomeSpeechOutput;
-  return buildResponseWithRepromt(speechOutput, false, "", more);
+  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
 
 }
 
