@@ -63,7 +63,6 @@ function log() {
 }
 
 app.post('/comparethecarpart', function (req, res) {
-  test(req.body.ktype, req.body.category);
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
@@ -75,7 +74,7 @@ app.post('/comparethecarpart', function (req, res) {
       case 'VehicleDetailsIntent':
         getRegDetails(req.body.request.intent).then(result => res.json(result))
         break;
-      case 'VehicleDetailsIntent':
+      case 'getCategoryDetails':
         getCategoryDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'AMAZON.YesIntent':
@@ -92,11 +91,6 @@ app.post('/comparethecarpart', function (req, res) {
     }
   }
 });
-
-async function test(ktype, category) {
-
-  console.log(location)
-}
 
 function handleDataMissing() {
   return buildResponse(MISSING_DETAILS, true, null)
@@ -167,10 +161,9 @@ async function getCategoryDetails(intentDetails) {
   if (result.length > 0) {
     var location = '';
     for (var i = 0; i < result1.length; i++) {
-      location += result1[i].location1 + PAUSE;
+      location += result1[i].location1 + ' OR ' + PAUSE;
     }
-    var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
-      WHISPER + ' We have the following parts available - ' + PAUSE + location + PAUSE + ' ' + MORE_MESSAGE1;
+    var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
