@@ -162,8 +162,9 @@ async function getCategoryDetails(intentDetails) {
   console.log(result)
   if (result.length > 0) {
     var location = '';
-    for (var i = 0; i < result1.length; i++) {
-      location += result1[i].location1 + ' OR ' + PAUSE;
+    for (var i = 0; i < result.length; i++) {
+      if (location.toString().toLowerCase().indexOf(result[i].location1.toString().toLowerCase()) == -1)
+        location += result[i].location1 + ' OR ' + PAUSE;
     }
     var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
     const speechOutput = welcomeSpeechOutput;
