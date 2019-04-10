@@ -137,10 +137,10 @@ async function getRegDetails(intentDetails) {
   let result1 = await promise1;
   var category = '';
   for (var i = 0; i < result1.length; i++) {
-    category += result1[i] + PAUSE;
+    category += result1[i] + ' ' + PAUSE;
   }
   var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
-    WHISPER + 'We have the following parts available' + PAUSE + category;
+    WHISPER + ' We have the following parts available' + PAUSE + category + PAUSE + ' ' + MORE_MESSAGE;
   const speechOutput = welcomeSpeechOutput;
 
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
@@ -179,9 +179,8 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
         "type": "SSML",
         "ssml": speechOutput,
         "text": speechText
-      }
-    }, 
-    "card": {
+      },
+    },"card": {
       "type": "Simple",
       "title": SKILL_NAME,
       "content": cardText,
