@@ -138,7 +138,6 @@ function getRegDetails(intentDetails) {
       const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
     });
-  return buildResponseWithRepromt('Your vehicle is <break time="0.3s" />', false, "Over 1 million car parts available", HELP_REPROMPT);
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
@@ -173,21 +172,21 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
       "outputSpeech": {
         "type": "SSML",
         "ssml": speechOutput
+      },
+      "card": {
+        "type": "Simple",
+        "title": SKILL_NAME,
+        "content": cardText,
+        "text": cardText
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": reprompt,
+          "ssml": reprompt
+        }
       }
-    },
-    "card": {
-      "type": "Simple",
-      "title": SKILL_NAME,
-      "content": cardText,
-      "text": cardText
-    },
-    "reprompt": {
-      "outputSpeech": {
-        "type": "PlainText",
-        "text": reprompt,
-        "ssml": reprompt
-      }
-    },
+    }
   }
   console.log(jsonObj)
   return jsonObj
