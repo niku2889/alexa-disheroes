@@ -178,13 +178,6 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
         "title": SKILL_NAME,
         "content": cardText,
         "text": cardText
-      },
-      "reprompt": {
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": reprompt,
-          "ssml": reprompt
-        }
       }
     }
   }
