@@ -14,9 +14,11 @@ const HELP_MESSAGE = 'You can say please fetch me a hero, or, you can say exit..
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
 const MORE_MESSAGE = 'which category would you like?'
+const MORE_MESSAGE1 = 'what would you like?'
 const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
 let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
+var ktype;
 
 const data = [
   'Aladdin  ',
@@ -60,8 +62,8 @@ function log() {
   }
 }
 
-app.post('/comparethecarpart', requestVerifier, function (req, res) {
-
+app.post('/comparethecarpart', function (req, res) {
+  test(req.body.ktype, req.body.category);
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
@@ -72,6 +74,9 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
         getRegDetails(req.body.request.intent).then(result => res.json(result))
+        break;
+      case 'VehicleDetailsIntent':
+        getCategoryDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -87,6 +92,11 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
     }
   }
 });
+
+async function test(ktype, category) {
+
+  console.log(location)
+}
 
 function handleDataMissing() {
   return buildResponse(MISSING_DETAILS, true, null)
@@ -109,18 +119,16 @@ function help() {
 }
 
 function getWelcomeMsg() {
-
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
-
   const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE;
   const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = 'Please tell me your vehicle registration number'
 
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
-
 }
 
 async function getRegDetails(intentDetails) {
+  ktype = '';
   let promise = new Promise((resolve, reject) => {
     VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
       .then(uni => {
@@ -128,6 +136,7 @@ async function getRegDetails(intentDetails) {
       });
   });
   let result = await promise;
+  ktype = result[0].ktype;
   let promise1 = new Promise((resolve, reject) => {
     Master.find({ kType: result[0].ktype }).distinct('mainCategory')
       .then(uni => {
@@ -137,13 +146,36 @@ async function getRegDetails(intentDetails) {
   let result1 = await promise1;
   var category = '';
   for (var i = 0; i < result1.length; i++) {
-    category += result1[i] + ' ' + PAUSE;
+    category += result1[i] + ',' + PAUSE;
   }
   var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
-    WHISPER + ' We have the following parts available' + PAUSE + category + PAUSE + ' ' + MORE_MESSAGE;
+    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' + MORE_MESSAGE;
   const speechOutput = welcomeSpeechOutput;
 
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+}
+
+async function getCategoryDetails(intentDetails) {
+  let promise = new Promise((resolve, reject) => {
+    Master.find({ kType: ktype, mainCategory: intentDetails.slots.categoryname.value }, { yinYangQ1: 1, location1: 1 })
+      .then(uni => {
+        resolve(uni);
+      });
+  });
+  let result = await promise;
+
+  if (result.length > 0) {
+    var location = '';
+    for (var i = 0; i < result1.length; i++) {
+      location += result1[i].location1 + PAUSE;
+    }
+    var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
+      WHISPER + ' We have the following parts available - ' + PAUSE + location + PAUSE + ' ' + MORE_MESSAGE1;
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+  } else {
+  }
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
@@ -180,7 +212,7 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
         "ssml": speechOutput,
         "text": speechText
       },
-    },"card": {
+    }, "card": {
       "type": "Simple",
       "title": SKILL_NAME,
       "content": cardText,
