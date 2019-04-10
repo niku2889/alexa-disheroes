@@ -159,7 +159,7 @@ async function getCategoryDetails(intentDetails) {
       });
   });
   let result = await promise;
-
+  console.log(result)
   if (result.length > 0) {
     var location = '';
     for (var i = 0; i < result1.length; i++) {
