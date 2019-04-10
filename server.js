@@ -116,28 +116,27 @@ function getWelcomeMsg() {
   // const heroArr = data;
   // const heroIndex = Math.floor(Math.random() * heroArr.length);
   // const randomHero = heroArr[heroIndex];
-  // const tempOutput = WHISPER + GET_HERO_MESSAGE + randomHero + PAUSE;
-  // const speechOutput = welcomeSpeechOutput + tempOutput + MORE_MESSAGE
+  const tempOutput = WHISPER + GET_HERO_MESSAGE + PAUSE;
+  const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = 'Please tell me your vehicle registration number'
 
-  const speechOutput = welcomeSpeechOutput;
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
 
 }
 
 function getRegDetails(intentDetails) {
   console.log(intentDetails.slots.registrationnumber.value)
-  var tes= 'w111bop';
+  var tes = 'w111bop';
   VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
     .then(data => {
       console.log(data)
-      var welcomeSpeechOutput = 'Your vehicle is ' + data[0].model + ' ' + data[0].engine + ' <break time="0.3s" />';
+      var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + data[0].model + ' ' + data[0].engine + PAUSE;
       const speechOutput = welcomeSpeechOutput;
       console.log(speechOutput)
-      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
     }).catch(err => {
       const speechOutput = err.message || "Some error occurred while retrieving your vehicle details please try again";
-      return buildResponseWithRepromt(speechOutput, false, "", HELP_REPROMPT);
+      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", HELP_REPROMPT);
     });
 }
 
