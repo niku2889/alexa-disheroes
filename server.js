@@ -153,7 +153,7 @@ async function getCategoryDetails(intentDetails) {
   console.log(ktype)
   console.log(intentDetails.slots.categoryname.value)
   let promise = new Promise((resolve, reject) => {
-    Master.find({ kType: ktype, mainCategory: intentDetails.slots.categoryname.value }, { yinYangQ1: 1, location1: 1, lapArtId: 1 })
+    Master.find({ kType: ktype, mainCategory: { $regex: new RegExp(intentDetails.slots.categoryname.value.toString().replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, "\\$&"), 'i') } }, { yinYangQ1: 1, location1: 1, lapArtId: 1 })
       .then(uni => {
         resolve(uni);
       });
