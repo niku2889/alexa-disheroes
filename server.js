@@ -151,6 +151,7 @@ async function getCategoryDetails(intentDetails) {
   });
   let result = await promise;
   masterData = result;
+  var laparts = '';
   console.log(result)
   if (result.length > 0) {
     var location = '';
@@ -165,10 +166,11 @@ async function getCategoryDetails(intentDetails) {
         }
         locationCheck += result[i].location1;
       }
+      laparts += result[i].lapArtId;
     }
     if (locationCheck == '') {
       let productData = [];
-      var ean = result[0].lapArtId.toString().split('\n');
+      var ean = laparts.toString().split('\n');
       let uIndex = 0;
       let promise = new Promise((resolve, reject) => {
         for (var i = 0; i < ean.length; i++) {
