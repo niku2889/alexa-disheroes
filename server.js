@@ -19,18 +19,7 @@ const PAUSE = '<break time="0.3s" />'
 const WHISPER = '<amazon:effect name="whispered"/>'
 let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
 var ktype;
-
-const data = [
-  'Aladdin  ',
-  'Cindrella ',
-  'Bambi',
-  'Bella ',
-  'Bolt ',
-  'Donald Duck',
-  'Genie ',
-  'Goofy',
-  'Mickey Mouse',
-];
+var masterData;
 
 app.use(bodyParser.json({
   verify: function getRawBody(req, res, buf) {
@@ -76,6 +65,9 @@ app.post('/comparethecarpart', function (req, res) {
         break;
       case 'getCategoryDetails':
         getCategoryDetails(req.body.request.intent).then(result => res.json(result))
+        break;
+      case 'getPositionDetails':
+        getPositionDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -159,12 +151,17 @@ async function getCategoryDetails(intentDetails) {
       });
   });
   let result = await promise;
+  masterData = result;
   console.log(result)
   if (result.length > 0) {
     var location = '';
     for (var i = 0; i < result.length; i++) {
-      if (location.toString().toLowerCase().indexOf(result[i].location1.toString().toLowerCase()) == -1)
-        location += result[i].location1 + PAUSE;
+      if (location.toString().toLowerCase().indexOf(result[i].location1.toString().toLowerCase()) == -1) {
+        if (i == 0)
+          location += result[i].location1 + ' OR ' + PAUSE;
+        else
+          location += result[i].location1 + ' OR ' + PAUSE;
+      }
     }
     var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
     const speechOutput = welcomeSpeechOutput;
@@ -175,6 +172,25 @@ async function getCategoryDetails(intentDetails) {
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
+  }
+}
+
+async function getPositionDetails(intentDetails) {
+  if (masterData.length > 0) {
+    var variant = '';
+    for (var i = 0; i < masterData.length; i++) {
+      if (masterData[i].location1.toString().toLowerCase().indexOf(intentDetails.slots.position.value.toString().toLowerCase()) != -1)
+        variant += masterData[i].yinYangQ1 + PAUSE + ' ';
+    }
+    var welcomeSpeechOutput = variant + PAUSE + ' ' + MORE_MESSAGE1;
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+  } else {
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' location ' + PAUSE + ' ' + 'which other location would you like?';
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other location would you like?');
   }
 }
 
