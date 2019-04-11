@@ -182,13 +182,14 @@ async function getCategoryDetails(intentDetails) {
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' + PAUSE + 'pound' + PAUSE + productData[0].lowest + PAUSE + 'Would you like to buy?';
+                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' 
+                + PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
             }).catch(err => {
               console.log(err.message)
-              resolve('Something wrong please try again')
+              // resolve('Something wrong please try again')
             });
         }
       });
@@ -236,7 +237,8 @@ async function getPositionDetails(intentDetails) {
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' + PAUSE + 'pound' + PAUSE + productData[0].lowest + PAUSE + 'Would you like to buy?';
+                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' + 
+                PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
