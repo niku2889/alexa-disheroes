@@ -168,7 +168,7 @@ async function getCategoryDetails(intentDetails) {
     }
     if (locationCheck == '') {
       let productData = [];
-      var ean = laparts.toString().split('\n');
+      var ean = result[0].lapArtId.toString().split('\n');
       let uIndex = 0;
       let promise = new Promise((resolve, reject) => {
         for (var i = 0; i < ean.length; i++) {
