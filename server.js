@@ -57,7 +57,6 @@ app.post('/comparethecarpart', function (req, res) {
   } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
     log("Session End")
   } else if (req.body.request.type === 'IntentRequest') {
-    console.log(req.body.request)
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
         getRegDetails(req.body.request.intent).then(result => res.json(result))
@@ -144,10 +143,13 @@ async function getRegDetails(intentDetails) {
 }
 
 async function getCategoryDetails(intentDetails) {
-  console.log(ktype)
-  console.log(intentDetails.slots.categoryname.value)
+  var cate = '';
+  if (intentDetails.slots.categoryname.value.toString() == 'brake diks')
+    cate = 'Brake Discs';
+  else
+    cate = intentDetails.slots.categoryname.value.toString();
   let promise = new Promise((resolve, reject) => {
-    Master.find({ kType: ktype, mainCategory: { $regex: new RegExp(intentDetails.slots.categoryname.value.toString().replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, "\\$&"), 'i') } }, { yinYangQ2: 1, location1: 1, lapArtId: 1 })
+    Master.find({ kType: ktype, mainCategory: { $regex: new RegExp(cate.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, "\\$&"), 'i') } }, { yinYangQ2: 1, location1: 1, lapArtId: 1 })
       .then(uni => {
         resolve(uni);
       });
@@ -155,7 +157,6 @@ async function getCategoryDetails(intentDetails) {
   let result = await promise;
   masterData = result;
   var laparts = '';
-  console.log(result)
   if (result.length > 0) {
     var location = '';
     var locationCheck = '';
@@ -191,7 +192,6 @@ async function getCategoryDetails(intentDetails) {
                 resolve(speechOutput);
               }
             }).catch(err => {
-              console.log(err.message)
               // resolve('Something wrong please try again')
             });
         }
@@ -206,7 +206,7 @@ async function getCategoryDetails(intentDetails) {
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' location ' + PAUSE + ' ' + 'which other location would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' location ' + PAUSE + ' ' + 'which other location would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other location would you like?');
@@ -260,7 +260,7 @@ async function getPositionDetails(intentDetails) {
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
@@ -304,7 +304,7 @@ async function getVariantDetails(intentDetails) {
     return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
 
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
