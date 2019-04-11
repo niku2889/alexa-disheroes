@@ -160,7 +160,7 @@ async function getCategoryDetails(intentDetails) {
         if (i == 0)
           location += result[i].location1 + ' OR ' + PAUSE;
         else
-          location += result[i].location1  + PAUSE;
+          location += result[i].location1 + PAUSE;
       }
     }
     var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
@@ -178,20 +178,61 @@ async function getCategoryDetails(intentDetails) {
 async function getPositionDetails(intentDetails) {
   if (masterData.length > 0) {
     var variant = '';
+    var variantCheck = '';
+    var laparts = '';
+    let productData = [];
     for (var i = 0; i < masterData.length; i++) {
-      if (masterData[i].location1.toString().toLowerCase().indexOf(intentDetails.slots.position.value.toString().toLowerCase()) != -1)
+      if (masterData[i].location1.toString().toLowerCase().indexOf(intentDetails.slots.position.value.toString().toLowerCase()) != -1) {
         variant += masterData[i].yinYangQ2 + PAUSE + ' ';
+        variantCheck += masterData[i].yinYangQ2;
+        laparts += masterData[i].lapArtId;
+      }
     }
-    var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients avaialable - ' +  variant + PAUSE + ' ' + MORE_MESSAGE1;
-    const speechOutput = welcomeSpeechOutput;
+    if (variantCheck == '') {
+      var ean = laparts.toString().split('\n');
+      let uIndex = 0;
+      for (var i = 0; i < ean.length; i++) {
+        Product.find({ lapArtId: value }, { supBrand: 1, "amazonData.UK.price": 1 })
+          .then(prod => {
+            uIndex += prod[0] == undefined ? 1 : 0;
+            let lowestPrice = getLowestPrice(prod[0]);
+            prod[0].lowest = lowestPrice;
+            productData.push(prod[0]);
+            if (productData.length == (ean.length - uIndex)) {
+              productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
+              var welcomeSpeechOutput = 'The following ' + productData[i].supBrand + ' is available at the cheapest price ' + PAUSE + 'Whould you like to buy?';
+              const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+              return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+            }
+          }).catch(err => {
+          });
+      }
+    } else {
+      var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients available - ' + variant + PAUSE + ' ' + MORE_MESSAGE1;
+      const speechOutput = welcomeSpeechOutput;
+
+      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+    }
   } else {
     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' location ' + PAUSE + ' ' + 'which other location would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other location would you like?');
   }
+}
+
+function getLowestPrice(product) {
+  let lowest = [];
+  if (product.amazonData.UK.price != '') {
+    lowest.push(parseFloat(product.amazonData.UK.price.toString().replace('£', '')));
+  }
+
+  let i = lowest.length > 0 ? lowest.indexOf(Math.min(...lowest)) : '';
+  let p = {
+    price: lowest.length > 0 ? Math.min(...lowest) : 'NA',
+  }
+  return p;
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
