@@ -66,7 +66,7 @@ app.post('/comparethecarpart', function (req, res) {
         getCategoryDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'getPositionDetails':
-        getPositionDetails(req.body.request.intent).then(result => res.json(result))
+        getPositionDetails(req.body.request.intent).then(result => { console.log(result); res.json(result) });
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -205,6 +205,7 @@ async function getPositionDetails(intentDetails) {
               return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'Would you like to buy?');
             }
           }).catch(err => {
+
           });
       }
     } else {
