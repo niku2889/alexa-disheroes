@@ -172,9 +172,8 @@ async function getCategoryDetails(intentDetails) {
       let productData = [];
       var ean = laparts.toString().split('\n');
       let uIndex = 0;
-
-      for (var i = 0; i < ean.length; i++) {
-        let promise = new Promise((resolve, reject) => {
+      let promise = new Promise((resolve, reject) => {
+        for (var i = 0; i < ean.length; i++) {
           Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
             .then(prod => {
               console.log(prod[0])
@@ -182,6 +181,7 @@ async function getCategoryDetails(intentDetails) {
               let lowestPrice = getLowestPrice(prod[0]);
               prod[0].lowest = lowestPrice.price;
               productData.push(prod[0]);
+              console.log(productData)
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' + PAUSE + 'pound' + PAUSE + productData[0].lowest + PAUSE + 'Would you like to buy?';
@@ -189,12 +189,14 @@ async function getCategoryDetails(intentDetails) {
                 resolve(speechOutput);
               }
             }).catch(err => {
+              console.log(err.message)
               resolve('Something wrong please try again')
             });
-        });
-        let result = await promise;
-        return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
-      }
+        }
+      });
+
+      let result = await promise;
+      return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
     } else {
       var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
       const speechOutput = welcomeSpeechOutput;
