@@ -145,7 +145,7 @@ async function getCategoryDetails(intentDetails) {
   console.log(ktype)
   console.log(intentDetails.slots.categoryname.value)
   let promise = new Promise((resolve, reject) => {
-    Master.find({ kType: ktype, mainCategory: { $regex: new RegExp(intentDetails.slots.categoryname.value.toString().replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, "\\$&"), 'i') } }, { yinYangQ1: 1, location1: 1, lapArtId: 1 })
+    Master.find({ kType: ktype, mainCategory: { $regex: new RegExp(intentDetails.slots.categoryname.value.toString().replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, "\\$&"), 'i') } }, { yinYangQ2: 1, location1: 1, lapArtId: 1 })
       .then(uni => {
         resolve(uni);
       });
@@ -160,7 +160,7 @@ async function getCategoryDetails(intentDetails) {
         if (i == 0)
           location += result[i].location1 + ' OR ' + PAUSE;
         else
-          location += result[i].location1 + ' OR ' + PAUSE;
+          location += result[i].location1  + PAUSE;
       }
     }
     var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
@@ -180,9 +180,9 @@ async function getPositionDetails(intentDetails) {
     var variant = '';
     for (var i = 0; i < masterData.length; i++) {
       if (masterData[i].location1.toString().toLowerCase().indexOf(intentDetails.slots.position.value.toString().toLowerCase()) != -1)
-        variant += masterData[i].yinYangQ1 + PAUSE + ' ';
+        variant += masterData[i].yinYangQ2 + PAUSE + ' ';
     }
-    var welcomeSpeechOutput = variant + PAUSE + ' ' + MORE_MESSAGE1;
+    var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients avaialable - ' +  variant + PAUSE + ' ' + MORE_MESSAGE1;
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
