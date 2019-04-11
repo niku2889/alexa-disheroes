@@ -66,7 +66,10 @@ app.post('/comparethecarpart', function (req, res) {
         getCategoryDetails(req.body.request.intent).then(result => res.json(result))
         break;
       case 'getPositionDetails':
-        getPositionDetails(req.body.request.intent).then(result => { console.log(result); res.json(result) });
+        getPositionDetails(req.body.request.intent).then(result => { res.json(result) });
+        break;
+      case 'getVariantDetails':
+        getVariantDetails(req.body.request.intent).then(result => { res.json(result) });
         break;
       case 'AMAZON.YesIntent':
         res.json(getNewHero());
@@ -182,8 +185,8 @@ async function getCategoryDetails(intentDetails) {
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' 
-                + PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at '
+                  + PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
@@ -237,13 +240,13 @@ async function getPositionDetails(intentDetails) {
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' + 
-                PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
+                  PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
             }).catch(err => {
-              resolve('Something wrong please try again')
+              //resolve('Something wrong please try again')
             });
         }
       });
@@ -256,6 +259,50 @@ async function getPositionDetails(intentDetails) {
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
+  } else {
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
+  }
+}
+
+async function getVariantDetails(intentDetails) {
+  if (masterData.length > 0) {
+    var laparts = '';
+    let productData = [];
+    for (var i = 0; i < masterData.length; i++) {
+      if (masterData[i].yinYangQ2.toString().toLowerCase().indexOf(intentDetails.slots.variantname.value.toString().toLowerCase()) != -1) {
+        laparts += masterData[i].lapArtId;
+      }
+    }
+    var ean = laparts.toString().split('\n');
+    let uIndex = 0;
+
+    let promise = new Promise((resolve, reject) => {
+      for (var i = 0; i < ean.length; i++) {
+        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
+          .then(prod => {
+            uIndex += prod[0] == undefined ? 1 : 0;
+            let lowestPrice = getLowestPrice(prod[0]);
+            prod[0].lowest = lowestPrice.price;
+            productData.push(prod[0]);
+            if (productData.length == (ean.length - uIndex)) {
+              productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
+              var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
+                PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+              const speechOutput = welcomeSpeechOutput;
+              resolve(speechOutput);
+            }
+          }).catch(err => {
+            //resolve('Something wrong please try again')
+          });
+      }
+    });
+
+    let result = await promise;
+    return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
+
   } else {
     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
     const speechOutput = welcomeSpeechOutput;
