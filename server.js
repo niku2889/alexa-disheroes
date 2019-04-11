@@ -191,7 +191,7 @@ async function getPositionDetails(intentDetails) {
       var ean = laparts.toString().split('\n');
       let uIndex = 0;
       for (var i = 0; i < ean.length; i++) {
-        Product.find({ lapArtId: value }, { supBrand: 1, "amazonData.UK.price": 1 })
+        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
           .then(prod => {
             uIndex += prod[0] == undefined ? 1 : 0;
             let lowestPrice = getLowestPrice(prod[0]);
@@ -199,7 +199,7 @@ async function getPositionDetails(intentDetails) {
             productData.push(prod[0]);
             if (productData.length == (ean.length - uIndex)) {
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-              var welcomeSpeechOutput = 'The following ' + productData[i].supBrand + ' is available at the cheapest price ' + PAUSE + 'Whould you like to buy?';
+              var welcomeSpeechOutput = 'The following ' + productData[0].supBrand + ' is available at the cheapest price ' + PAUSE + 'Whould you like to buy?';
               const speechOutput = welcomeSpeechOutput;
 
               return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
