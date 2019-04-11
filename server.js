@@ -199,10 +199,10 @@ async function getPositionDetails(intentDetails) {
             productData.push(prod[0]);
             if (productData.length == (ean.length - uIndex)) {
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
-              var welcomeSpeechOutput = 'The following ' + productData[0].supBrand + ' is available at the cheapest price ' + PAUSE + 'Whould you like to buy?';
+              var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price ' + PAUSE + 'Would you like to buy?';
               const speechOutput = welcomeSpeechOutput;
 
-              return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
+              return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'Would you like to buy?');
             }
           }).catch(err => {
           });
