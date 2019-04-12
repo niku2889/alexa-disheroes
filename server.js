@@ -50,13 +50,14 @@ function log() {
   }
 }
 
-app.post('/comparethecarpart', function (req, res) {
-  console.log(req.body)
+app.post('/comparethecarpart', requestVerifier, function (req, res) {
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
-  } else if (req.body.request.type === 'SessionEndedRequest') { /* ... */
-    log("Session End")
+  } else if (req.body.request.type === 'SessionEndedRequest') {
+    const speechOutput = 'There was a problem with the requested skills reponse please try again'
+    var jsonObj = buildResponse(speechOutput, true, "");
+    return jsonObj;
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
@@ -75,6 +76,12 @@ app.post('/comparethecarpart', function (req, res) {
         res.json(getNewHero());
         break;
       case 'AMAZON.NoIntent':
+        res.json(stopAndExit());
+        break;
+      case 'AMAZON.CancelIntent':
+        res.json(stopAndExit());
+        break;
+      case 'AMAZON.StopIntent':
         res.json(stopAndExit());
         break;
       case 'AMAZON.HelpIntent':
