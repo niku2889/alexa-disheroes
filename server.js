@@ -51,7 +51,7 @@ function log() {
 }
 
 app.post('/comparethecarpart', function (req, res) {
-  console.log(req.body.request)
+  console.log(req.body)
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
