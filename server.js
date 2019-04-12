@@ -51,6 +51,7 @@ function log() {
 }
 
 app.post('/comparethecarpart', function (req, res) {
+  console.log(req.body.request)
   if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
@@ -61,13 +62,13 @@ app.post('/comparethecarpart', function (req, res) {
       case 'VehicleDetailsIntent':
         getRegDetails(req.body.request.intent).then(result => res.json(result))
         break;
-      case 'getCategoryDetails':
+      case 'CategoryDetailsIntent':
         getCategoryDetails(req.body.request.intent).then(result => res.json(result))
         break;
-      case 'getPositionDetails':
+      case 'PositionDetailsIntent':
         getPositionDetails(req.body.request.intent).then(result => { res.json(result) });
         break;
-      case 'getVariantDetails':
+      case 'VariantDetailsIntent':
         getVariantDetails(req.body.request.intent).then(result => { res.json(result) });
         break;
       case 'AMAZON.YesIntent':
@@ -206,7 +207,7 @@ async function getCategoryDetails(intentDetails) {
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' location ' + PAUSE + ' ' + 'which other location would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other location would you like?');
@@ -260,7 +261,7 @@ async function getPositionDetails(intentDetails) {
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' varient ' + PAUSE + ' ' + 'which other varient would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
@@ -304,7 +305,7 @@ async function getVariantDetails(intentDetails) {
     return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
 
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + ' ' + 'which other varient would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
