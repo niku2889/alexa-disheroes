@@ -87,6 +87,9 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
       case 'AMAZON.HelpIntent':
         res.json(help());
         break;
+      case 'Unhandled':
+        res.json(stopAndExit());
+        break;
       default:
 
     }
