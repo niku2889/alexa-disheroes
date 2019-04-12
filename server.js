@@ -51,13 +51,17 @@ function log() {
 }
 
 app.post('/comparethecarpart', requestVerifier, function (req, res) {
-  if (req.body.request.type === 'LaunchRequest') {
+  if (req.body.request.type === 'SessionEndedRequest') {
+    if (req.body.request.reason === 'USER_INITIATED') {
+      res.json(stopAndExit());
+    } else {
+      const speechOutput = 'There was a problem with the requested skills response please try again'
+      var jsonObj = buildResponse(speechOutput, true, "");
+      return jsonObj;
+    }
+  } else if (req.body.request.type === 'LaunchRequest') {
     res.json(getWelcomeMsg());
     isFisrtTime = false
-  } else if (req.body.request.type === 'SessionEndedRequest') {
-    const speechOutput = 'There was a problem with the requested skills reponse please try again'
-    var jsonObj = buildResponse(speechOutput, true, "");
-    return jsonObj;
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
       case 'VehicleDetailsIntent':
