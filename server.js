@@ -76,7 +76,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
         getVariantDetails(req.body.request.intent).then(result => { res.json(result) });
         break;
       case 'AMAZON.YesIntent':
-        res.json(getNewHero());
+        res.json(yesDetails());
         break;
       case 'AMAZON.NoIntent':
         res.json(stopAndExit());
@@ -128,7 +128,7 @@ function getWelcomeMsg() {
   const more = ' Registration number is w111bop';
 
   //return buildResponseWithPermission();
-  return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
+  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
 }
 
 async function getRegDetails(intentDetails) {
@@ -349,6 +349,13 @@ function getLowestPrice(product) {
     price: lowest.length > 0 ? Math.min(...lowest) : 'NA',
   }
   return p;
+}
+
+function yesDetails(){
+  var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
+  const speechOutput = welcomeSpeechOutput;
+
+  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
