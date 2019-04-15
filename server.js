@@ -9,8 +9,7 @@ const Master = require('./models/master.model.js');
 const Product = require('./models/product.model.js')
 var async = require('async');
 const SKILL_NAME = 'Compare the car part';
-const HELP_MESSAGE = 'You can say please fetch me a hero, or, you can say exit... What can I help you with?';
-const HELP_REPROMPT = 'What can I help you with?';
+const HELP_REPROMPT = 'How can I help you with?';
 const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
 const MORE_MESSAGE = 'which category would you like?'
 const MORE_MESSAGE1 = 'what would you like?'
@@ -112,19 +111,21 @@ function stopAndExit() {
 }
 
 function help() {
-
-  const speechOutput = HELP_MESSAGE
+  const speechOutput = 'You can say ' + PAUSE + ' Registration number is w111bop' + PAUSE
+    + 'or' + PAUSE + 'You can say ' + PAUSE + 'category is air filters'
+    + 'or' + PAUSE + 'You can say ' + PAUSE + 'Exit';
   const reprompt = HELP_REPROMPT
-  var jsonObj = buildResponseWithRepromt(speechOutput, null, "", reprompt);
+  var jsonObj = buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", reprompt);
 
   return jsonObj;
 }
 
 function getWelcomeMsg() {
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
-  const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE;
+  const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
+    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w111bop';
   const speechOutput = welcomeSpeechOutput + tempOutput;
-  const more = 'Please tell me your vehicle registration number'
+  const more = ' Registration number is w111bop';
 
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
 }
@@ -151,7 +152,8 @@ async function getRegDetails(intentDetails) {
     category += result1[i] + ',' + PAUSE;
   }
   var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
-    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' + MORE_MESSAGE;
+    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
+    PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
   const speechOutput = welcomeSpeechOutput;
 
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
@@ -202,7 +204,7 @@ async function getCategoryDetails(intentDetails) {
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at '
-                  + PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+                  + PAUSE + productData[0].lowest + PAUSE + 'pounds ' + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
@@ -215,13 +217,13 @@ async function getCategoryDetails(intentDetails) {
       let result = await promise;
       return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
     } else {
-      var welcomeSpeechOutput = location + PAUSE + ' ' + MORE_MESSAGE1;
+      var welcomeSpeechOutput = location + PAUSE + ' ' + 'you can say' + PAUSE + 'front please' + PAUSE + MORE_MESSAGE1;
       const speechOutput = welcomeSpeechOutput;
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say' + PAUSE + 'rear please' + PAUSE + 'which other location would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other location would you like?');
@@ -256,7 +258,7 @@ async function getPositionDetails(intentDetails) {
               if (productData.length == (ean.length - uIndex)) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
-                  PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+                  PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
                 resolve(speechOutput);
               }
@@ -269,13 +271,13 @@ async function getPositionDetails(intentDetails) {
       let result = await promise;
       return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
     } else {
-      var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients available - ' + variant + PAUSE + ' ' + MORE_MESSAGE1;
+      var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients available - ' + variant + PAUSE + ' ' + 'you can say ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + MORE_MESSAGE1;
       const speechOutput = welcomeSpeechOutput;
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' varient ' + PAUSE + ' ' + 'which other varient would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' varient ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other varient would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
@@ -305,7 +307,7 @@ async function getVariantDetails(intentDetails) {
             if (productData.length == (ean.length - uIndex)) {
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
               var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
-                PAUSE + 'pound ' + PAUSE + productData[0].lowest + PAUSE + ' Would you like to buy?';
+                PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
               const speechOutput = welcomeSpeechOutput;
               resolve(speechOutput);
             }
@@ -319,10 +321,10 @@ async function getVariantDetails(intentDetails) {
     return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
 
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + ' ' + 'which other varient would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other variant would you like?';
     const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other variant would you like?');
   }
 }
 
