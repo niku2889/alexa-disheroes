@@ -127,8 +127,8 @@ function getWelcomeMsg() {
   const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = ' Registration number is w111bop';
 
-  return buildResponseWithPermission();
-  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
+  //return buildResponseWithPermission();
+  return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
 }
 
 async function getRegDetails(intentDetails) {
@@ -373,17 +373,32 @@ function buildResponse(speechText, shouldEndSession, cardText) {
   return jsonObj
 }
 
-function buildResponseWithPermission() {
-
+function buildResponseWithPermission(speechText, shouldEndSession, cardText, reprompt) {
+  const speechOutput = "<speak>" + speechText + "</speak>"
   var jsonObj = {
     "version": "1.0",
     "response": {
+      "response": {
+        "shouldEndSession": shouldEndSession,
+        "outputSpeech": {
+          "type": "SSML",
+          "ssml": speechOutput,
+          "text": speechText
+        },
+      },
       "card": {
         "type": "AskForPermissionsConsent",
         "permissions": [
           "alexa::profile:name:read",
           "alexa::profile:profile:email:read"
         ]
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": reprompt,
+          "ssml": reprompt
+        }
       }
     }
   }
