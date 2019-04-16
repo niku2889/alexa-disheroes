@@ -8,6 +8,7 @@ const VrmReg = require('./models/vrmReg.model.js');
 const Master = require('./models/master.model.js');
 const Product = require('./models/product.model.js')
 var async = require('async');
+var request = require('request');
 const SKILL_NAME = 'Compare the car part';
 const HELP_REPROMPT = 'How can I help you with?';
 const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
