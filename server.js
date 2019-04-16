@@ -360,14 +360,12 @@ function yesDetails(re) {
       "Accept": "application/json"
     }
   }, function (error, response, body) {
-    console.log(error.message)
     if (error) {
       var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
       const speechOutput = welcomeSpeechOutput;
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
     } else {
-
     }
   });
   var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
