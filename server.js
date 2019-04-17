@@ -112,7 +112,7 @@ function stopAndExit() {
 }
 
 function help() {
-  const speechOutput = 'You can say ' + PAUSE + ' Registration number is w111bop' + PAUSE
+  const speechOutput = 'You can say ' + PAUSE + ' Registration number is w one one one b o p' + PAUSE
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'category is air filters'
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'Exit' + PAUSE + ' How can I help you with?';
   const reprompt = HELP_REPROMPT
@@ -124,9 +124,9 @@ function help() {
 function getWelcomeMsg() {
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
   const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w111bop';
+    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w one one one b o p';
   const speechOutput = welcomeSpeechOutput + tempOutput;
-  const more = ' Registration number is w111bop';
+  const more = ' Registration number is w one one one b o p';
 
   //return buildResponseWithPermission();
   return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
@@ -141,24 +141,81 @@ async function getRegDetails(intentDetails) {
       });
   });
   let result = await promise;
-  ktype = result[0].ktype;
-  let promise1 = new Promise((resolve, reject) => {
-    Master.find({ kType: result[0].ktype }).distinct('mainCategory')
-      .then(uni => {
-        resolve(uni);
-      });
-  });
-  let result1 = await promise1;
-  var category = '';
-  for (var i = 0; i < result1.length; i++) {
-    category += result1[i] + ',' + PAUSE;
-  }
-  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
-    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
-    PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
-  const speechOutput = welcomeSpeechOutput;
+  if (result.length > 0) {
+    ktype = result[0].ktype;
+    let promise1 = new Promise((resolve, reject) => {
+      Master.find({ kType: result[0].ktype }).distinct('mainCategory')
+        .then(uni => {
+          resolve(uni);
+        });
+    });
+    let result1 = await promise1;
+    var category = '';
+    for (var i = 0; i < result1.length; i++) {
+      category += result1[i] + ',' + PAUSE;
+    }
+    var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
+      WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
+      PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
+    const speechOutput = welcomeSpeechOutput;
 
-  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+  } else {
+    var username = "TC_myiqisltd";
+    var password = "R00k3ry8arn";
+    var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
+
+    request.get({
+      url: "https://www.cartell.ie/secure/xml/findvehicle?registration=" + intentDetails.slots.registrationnumber.value + "&servicename=XML_Cartell_MYIQIS&xmltype=soap12&readingtype=miles",
+      headers: {
+        "Authorization": auth
+      }
+    }, function (error, response, body) {
+      if (error) {
+        var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
+        const speechOutput = welcomeSpeechOutput;
+
+        return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+      }
+      var parseString = require('xml2js').parseString;
+      var xml = body.toString();
+      parseString(xml, function (err, result) {
+        if (result) {
+          let envelope = result['soap:Body'];
+          if (envelope.length > 0) {
+            let error = envelope[0]['soap:Fault'];
+            if (error != undefined) {
+              var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
+              const speechOutput = welcomeSpeechOutput;
+
+              return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+            } else {
+              ktype = envelope[0].FindByRegistration[0].Vehicle[0].TecDoc_KTyp_No[0];
+              Master.find({ kType: ktype }).distinct('mainCategory')
+                .then(uni => {
+                  var category = '';
+                  for (var i = 0; i < uni.length; i++) {
+                    category += uni[i] + ',' + PAUSE;
+                  }
+                  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0] + ' '
+                    + envelope[0].FindByRegistration[0].Vehicle[0].FuelType[0] + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].Power[0] + PAUSE +
+                    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
+                    PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
+                  const speechOutput = welcomeSpeechOutput;
+
+                  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+                });
+            }
+          } else {
+            var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
+            const speechOutput = welcomeSpeechOutput;
+
+            return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+          }
+        }
+      });
+    });
+  }
 }
 
 async function getCategoryDetails(intentDetails) {
@@ -234,10 +291,10 @@ async function getCategoryDetails(intentDetails) {
     }
   } else {
     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say ' +
-      PAUSE + 'registration number is' + PAUSE + 'w111bop';
+      PAUSE + 'registration number is' + PAUSE + 'w one one one b o p';
     const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'registration number is w111bop');
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'registration number is w one one one b o p');
   }
 }
 
