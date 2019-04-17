@@ -134,6 +134,27 @@ function getWelcomeMsg() {
 
 async function getRegDetails(intentDetails) {
   console.log(intentDetails.slots.registrationnumber.value)
+  let s = intentDetails.slots.registrationnumber.value.toString().split(' ');
+  let finalS= '';
+  for (var i = 0; i < s.length; i++) {
+    switch (s[i]) {
+      case 'one': s[i] = 1; break;
+      case 'two': s[i] = 2; break;
+      case 'three': s[i] = 3; break;
+      case 'four': s[i] = 4; break;
+      case 'five': s[i] = 5; break;
+      case 'six': s[i] = 6; break;
+      case 'seven': s[i] = 7; break;
+      case 'eight': s[i] = 8; break;
+      case 'nine': s[i] = 9; break;
+      case 'zero': s[i] = 0; break;
+      default:
+    }
+    finalS += s[i];
+  }
+  console.log(s)
+  console.log(finalS)
+
   ktype = '';
   let promise = new Promise((resolve, reject) => {
     VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
