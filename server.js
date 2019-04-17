@@ -233,7 +233,8 @@ async function getRegDetails(intentDetails) {
             for (var i = 0; i < result1.length; i++) {
               category += result1[i] + ',' + PAUSE;
             }
-            var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + result[0].model + ' ' + result[0].engine + PAUSE +
+            var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0] 
+              + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].FuelType[0] + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].Power[0] + PAUSE +
               WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
               PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
             const speechOutput = welcomeSpeechOutput;
