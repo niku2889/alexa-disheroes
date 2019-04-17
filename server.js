@@ -204,7 +204,7 @@ async function getRegDetails(intentDetails) {
         parseString(xml, function (err, result) {
           if (result) {
             console.log(result)
-            let envelope = result['soap:Body'];
+            let envelope = result['soap:Envelope']['soap:Body'];
             if (envelope.length > 0) {
               let error = envelope[0]['soap:Fault'];
               if (error != undefined) {
