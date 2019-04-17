@@ -77,7 +77,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
         getVariantDetails(req.body.request.intent).then(result => { res.json(result) });
         break;
       case 'AMAZON.YesIntent':
-        res.json(yesDetails(req.body));
+        yesDetails(req.body).then(result => { res.json(result) });
         break;
       case 'AMAZON.NoIntent':
         res.json(stopAndExit());
@@ -233,7 +233,7 @@ async function getRegDetails(intentDetails) {
             for (var i = 0; i < result1.length; i++) {
               category += result1[i] + ',' + PAUSE;
             }
-            var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0] 
+            var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0]
               + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].FuelType[0] + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].Power[0] + PAUSE +
               WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
               PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
@@ -442,26 +442,34 @@ function getLowestPrice(product) {
   return p;
 }
 
-function yesDetails(re) {
-  request.get({
-    url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
-    headers: {
-      "Authorization": "Bearer " + re.context.System.apiAccessToken,
-      "Accept": "application/json"
-    }
-  }, function (error, response, body) {
-    if (error) {
-      var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
-      const speechOutput = welcomeSpeechOutput;
-
-      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
-    } else {
-    }
+async function yesDetails(re) {
+  let promise = new Promise((resolve, reject) => {
+    request.get({
+      url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
+      headers: {
+        "Authorization": "Bearer " + re.context.System.apiAccessToken,
+        "Accept": "application/json"
+      }
+    }, function (error, response, body) {
+      if (error) {
+        resolve(false);
+      } else {
+        resolve(response);
+      }
+    });
   });
-  var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
-  const speechOutput = welcomeSpeechOutput;
+  let result = await promise;
+  if (result == false) {
+    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
+    const speechOutput = welcomeSpeechOutput;
 
-  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
+  } else {
+    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
+    const speechOutput = welcomeSpeechOutput;
+
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
+  }
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
