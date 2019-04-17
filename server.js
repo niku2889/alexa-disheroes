@@ -157,7 +157,7 @@ async function getRegDetails(intentDetails) {
 
   ktype = '';
   let promise = new Promise((resolve, reject) => {
-    VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
+    VrmReg.find({ regno: finalS })
       .then(uni => {
         resolve(uni);
       });
@@ -203,6 +203,7 @@ async function getRegDetails(intentDetails) {
         var xml = body.toString();
         parseString(xml, function (err, result) {
           if (result) {
+            console.log(result)
             let envelope = result['soap:Body'];
             if (envelope.length > 0) {
               let error = envelope[0]['soap:Fault'];
