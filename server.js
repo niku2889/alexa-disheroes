@@ -133,6 +133,7 @@ function getWelcomeMsg() {
 }
 
 async function getRegDetails(intentDetails) {
+  console.log(intentDetails.slots.registrationnumber.value)
   ktype = '';
   let promise = new Promise((resolve, reject) => {
     VrmReg.find({ regno: intentDetails.slots.registrationnumber.value })
@@ -176,44 +177,45 @@ async function getRegDetails(intentDetails) {
         const speechOutput = welcomeSpeechOutput;
 
         return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
-      }
-      var parseString = require('xml2js').parseString;
-      var xml = body.toString();
-      parseString(xml, function (err, result) {
-        if (result) {
-          let envelope = result['soap:Body'];
-          if (envelope.length > 0) {
-            let error = envelope[0]['soap:Fault'];
-            if (error != undefined) {
+      } else {
+        var parseString = require('xml2js').parseString;
+        var xml = body.toString();
+        parseString(xml, function (err, result) {
+          if (result) {
+            let envelope = result['soap:Body'];
+            if (envelope.length > 0) {
+              let error = envelope[0]['soap:Fault'];
+              if (error != undefined) {
+                var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
+                const speechOutput = welcomeSpeechOutput;
+
+                return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+              } else {
+                ktype = envelope[0].FindByRegistration[0].Vehicle[0].TecDoc_KTyp_No[0];
+                Master.find({ kType: ktype }).distinct('mainCategory')
+                  .then(uni => {
+                    var category = '';
+                    for (var i = 0; i < uni.length; i++) {
+                      category += uni[i] + ',' + PAUSE;
+                    }
+                    var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0] + ' '
+                      + envelope[0].FindByRegistration[0].Vehicle[0].FuelType[0] + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].Power[0] + PAUSE +
+                      WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
+                      PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
+                    const speechOutput = welcomeSpeechOutput;
+
+                    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
+                  });
+              }
+            } else {
               var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
               const speechOutput = welcomeSpeechOutput;
 
               return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
-            } else {
-              ktype = envelope[0].FindByRegistration[0].Vehicle[0].TecDoc_KTyp_No[0];
-              Master.find({ kType: ktype }).distinct('mainCategory')
-                .then(uni => {
-                  var category = '';
-                  for (var i = 0; i < uni.length; i++) {
-                    category += uni[i] + ',' + PAUSE;
-                  }
-                  var welcomeSpeechOutput = 'Your vehicle is <break time="0.3s" />' + WHISPER + envelope[0].FindByRegistration[0].Vehicle[0].Model[0] + ' '
-                    + envelope[0].FindByRegistration[0].Vehicle[0].FuelType[0] + ' ' + envelope[0].FindByRegistration[0].Vehicle[0].Power[0] + PAUSE +
-                    WHISPER + ' We have the following parts available - ' + PAUSE + category + PAUSE + ' ' +
-                    PAUSE + ' you can say ' + PAUSE + WHISPER + ' Category is air filters' + PAUSE + MORE_MESSAGE;
-                  const speechOutput = welcomeSpeechOutput;
-
-                  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
-                });
             }
-          } else {
-            var welcomeSpeechOutput = 'we cannot find this registration number. Please ensure you say each letter or number in a single form from a to z or numbers 0 to 9';
-            const speechOutput = welcomeSpeechOutput;
-
-            return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
           }
-        }
-      });
+        });
+      }
     });
   }
 }
