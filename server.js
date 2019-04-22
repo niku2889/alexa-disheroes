@@ -19,6 +19,7 @@ const WHISPER = '<amazon:effect name="whispered"/>'
 let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1.mlab.com:51834/carpartdb?replicaSet=rs-ds151834';
 var ktype;
 var masterData;
+var email;
 
 app.use(bodyParser.json({
   verify: function getRawBody(req, res, buf) {
@@ -60,7 +61,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
       return jsonObj;
     }
   } else if (req.body.request.type === 'LaunchRequest') {
-    res.json(getWelcomeMsg(req.body).then(result => res.json(result)));
+    getWelcomeMsg(req.body).then(result => res.json(result));
     isFisrtTime = false
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
@@ -140,7 +141,8 @@ async function getWelcomeMsg(re) {
     });
   });
   let result = await promise;
-  console.log(result)
+  email = result;
+  console.log(email)
   if (result == false) {
     var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
