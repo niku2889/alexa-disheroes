@@ -112,7 +112,8 @@ function stopAndExit() {
 }
 
 function help() {
-  const speechOutput = 'You can say ' + PAUSE + ' Registration number is w one one one b o p' + PAUSE
+  const speechOutput = 'You can say ' + PAUSE + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE +
+    'b' + PAUSE + 'o' + PAUSE + 'p' + PAUSE
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'category is air filters'
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'Exit' + PAUSE + ' How can I help you with?';
   const reprompt = HELP_REPROMPT
@@ -124,12 +125,13 @@ function help() {
 function getWelcomeMsg() {
   var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
   const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w one one one b o p';
+    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
+    + 'o' + PAUSE + 'p';
   const speechOutput = welcomeSpeechOutput + tempOutput;
   const more = ' Registration number is w one one one b o p';
 
   //return buildResponseWithPermission();
-  return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
+  return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
 }
 
 async function getRegDetails(intentDetails) {
@@ -463,12 +465,12 @@ async function yesDetails(re) {
     var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
     const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", 'try again');
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
   } else {
     var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
     const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", 'try again');
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
   }
 }
 
