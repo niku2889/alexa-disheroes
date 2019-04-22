@@ -131,7 +131,7 @@ function getWelcomeMsg() {
   const more = ' Registration number is w one one one b o p';
 
   //return buildResponseWithPermission();
-  return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
+  return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
 }
 
 async function getRegDetails(intentDetails) {
