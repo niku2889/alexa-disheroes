@@ -513,7 +513,7 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
         "type": "AskForPermissionsConsent",
         "permissions": [
           "alexa::profile:name:read",
-          "alexa::profile:profile:email:read"
+          "alexa::profile:email:read"
         ]
       },
       "reprompt": {
