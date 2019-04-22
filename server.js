@@ -122,8 +122,8 @@ function help() {
   return jsonObj;
 }
 
-async function getWelcomeMsg(intentDetails) {
-  console.log(intentDetails)
+async function getWelcomeMsg(re) {
+  console.log(re)
   let promise = new Promise((resolve, reject) => {
     request.get({
       url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
@@ -140,6 +140,7 @@ async function getWelcomeMsg(intentDetails) {
     });
   });
   let result = await promise;
+  console.log(result)
   if (result == false) {
     var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
