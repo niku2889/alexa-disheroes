@@ -60,7 +60,7 @@ app.post('/comparethecarpart', requestVerifier, function (req, res) {
       return jsonObj;
     }
   } else if (req.body.request.type === 'LaunchRequest') {
-    res.json(getWelcomeMsg());
+    res.json(getWelcomeMsg(req.body).then(result => res.json(result)));
     isFisrtTime = false
   } else if (req.body.request.type === 'IntentRequest') {
     switch (req.body.request.intent.name) {
@@ -122,16 +122,46 @@ function help() {
   return jsonObj;
 }
 
-function getWelcomeMsg() {
-  var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
-  const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-    ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
-    + 'o' + PAUSE + 'p';
-  const speechOutput = welcomeSpeechOutput + tempOutput;
-  const more = ' Registration number is w one one one b o p';
+async function getWelcomeMsg(intentDetails) {
+  console.log(intentDetails)
+  let promise = new Promise((resolve, reject) => {
+    request.get({
+      url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
+      headers: {
+        "Authorization": "Bearer " + re.context.System.apiAccessToken,
+        "Accept": "application/json"
+      }
+    }, function (error, response, body) {
+      if (error) {
+        resolve(false);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+  let result = await promise;
+  if (result == false) {
+    var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
+    const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
+      ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
+      + 'o' + PAUSE + 'p';
+    const speechOutput = welcomeSpeechOutput + tempOutput;
+    const more = ' Registration number is w one one one b o p';
 
-  //return buildResponseWithPermission();
-  return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
+    //return buildResponseWithPermission();
+    return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
+  } else {
+    var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
+    const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
+      ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
+      + 'o' + PAUSE + 'p';
+    const speechOutput = welcomeSpeechOutput + tempOutput;
+    const more = ' Registration number is w one one one b o p';
+
+    //return buildResponseWithPermission();
+    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
+  }
+
 }
 
 async function getRegDetails(intentDetails) {
