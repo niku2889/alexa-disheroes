@@ -502,6 +502,7 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
     "version": "1.0",
     "response": {
       "response": {
+        "shouldEndSession": shouldEndSession,
         "outputSpeech": {
           "type": "SSML",
           "ssml": speechOutput,
@@ -522,8 +523,7 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
           "ssml": reprompt
         }
       }
-    },
-    "sessionAttributes": {}
+    }
   }
   console.log(jsonObj)
   return jsonObj
