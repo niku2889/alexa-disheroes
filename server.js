@@ -4,6 +4,7 @@ let express = require('express'),
   app = express();
 let alexaVerifier = require('alexa-verifier');
 let mongoose = require('mongoose');
+var mailer = require("nodemailer");
 const VrmReg = require('./models/vrmReg.model.js');
 const Master = require('./models/master.model.js');
 const Product = require('./models/product.model.js')
@@ -144,15 +145,11 @@ async function getWelcomeMsg(re) {
   email = result;
   console.log(email)
   if (result == false) {
-    var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
-    const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-      ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
-      + 'o' + PAUSE + 'p';
-    const speechOutput = welcomeSpeechOutput + tempOutput;
-    const more = ' Registration number is w one one one b o p';
+    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
+    const speechOutput = welcomeSpeechOutput;
+    const more = '';
 
-    //return buildResponseWithPermission();
-    return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
+    return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
   } else {
     var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
@@ -161,10 +158,8 @@ async function getWelcomeMsg(re) {
     const speechOutput = welcomeSpeechOutput + tempOutput;
     const more = ' Registration number is w one one one b o p';
 
-    //return buildResponseWithPermission();
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
   }
-
 }
 
 async function getRegDetails(intentDetails) {
@@ -478,33 +473,35 @@ function getLowestPrice(product) {
 }
 
 async function yesDetails(re) {
-  let promise = new Promise((resolve, reject) => {
-    request.get({
-      url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
-      headers: {
-        "Authorization": "Bearer " + re.context.System.apiAccessToken,
-        "Accept": "application/json"
-      }
-    }, function (error, response, body) {
-      if (error) {
-        resolve(false);
-      } else {
-        resolve(response);
-      }
-    });
+  // Use Smtp Protocol to send Email
+  var smtpTransport = mailer.createTransport("SMTP", {
+    service: "smtp.zoho.com",
+    auth: {
+      user: "voice@comparethecarpart.com",
+      pass: "Rookery12!"
+    }
   });
-  let result = await promise;
-  if (result == false) {
-    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
-    const speechOutput = welcomeSpeechOutput;
 
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
-  } else {
-    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again.';
-    const speechOutput = welcomeSpeechOutput;
-
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'try again');
+  var mail = {
+    from: "voice@comparethecarpart.com",
+    to: email,
+    subject: "Test Email - Alexa",
+    text: "Test Email text",
+    html: "<b>Test Email Text</b>"
   }
+
+  smtpTransport.sendMail(mail, function (error, response) {
+    if (error) {
+      console.log(error);
+    } else {
+      smtpTransport.close();
+      console.log("Message sent: " + response.message);
+      var welcomeSpeechOutput = 'We send email of lowest price part details to your email address Thank you for visiting us';
+      const speechOutput = welcomeSpeechOutput;
+
+      return buildResponseWithRepromt(speechOutput, true, "Over 1 million car parts available", 'try again');
+    }
+  });
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
