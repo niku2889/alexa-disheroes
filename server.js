@@ -474,8 +474,10 @@ function getLowestPrice(product) {
 
 async function yesDetails(re) {
   // Use Smtp Protocol to send Email
-  var smtpTransport = mailer.createTransport("SMTP", {
-    service: "smtp.zoho.com",
+  var smtpTransport = mailer.createTransport({
+    host: "smtp.zoho.com",
+    port: 465,
+    secure: true, //ssl
     auth: {
       user: "voice@comparethecarpart.com",
       pass: "Rookery12!"
