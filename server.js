@@ -321,14 +321,13 @@ async function getCategoryDetails(intentDetails) {
         let uIndex = 0;
         let promise = new Promise((resolve, reject) => {
           for (var i = 0; i < ean.length; i++) {
-            Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
+            Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
               .then(prod => {
                 uIndex += prod[0] == undefined ? 1 : 0;
                 let lowestPrice = getLowestPrice(prod[0]);
                 prod[0].lowest = lowestPrice.price;
                 productData.push(prod[0]);
                 if (productData.length == (ean.length - uIndex)) {
-                  console.log(productData[0].amazonData.UK)
                   productLink = productData[0].amazonData.UK.link;
                   brand = productData[0].supBrand;
                   productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -386,14 +385,13 @@ async function getPositionDetails(intentDetails) {
 
       let promise = new Promise((resolve, reject) => {
         for (var i = 0; i < ean.length; i++) {
-          Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
+          Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
             .then(prod => {
               uIndex += prod[0] == undefined ? 1 : 0;
               let lowestPrice = getLowestPrice(prod[0]);
               prod[0].lowest = lowestPrice.price;
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
-                console.log(productData[0].amazonData.UK)
                 productLink = productData[0].amazonData.UK.link;
                 brand = productData[0].supBrand;
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -438,14 +436,13 @@ async function getVariantDetails(intentDetails) {
 
     let promise = new Promise((resolve, reject) => {
       for (var i = 0; i < ean.length; i++) {
-        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1 })
+        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
           .then(prod => {
             uIndex += prod[0] == undefined ? 1 : 0;
             let lowestPrice = getLowestPrice(prod[0]);
             prod[0].lowest = lowestPrice.price;
             productData.push(prod[0]);
             if (productData.length == (ean.length - uIndex)) {
-              console.log(productData[0].amazonData.UK)
               productLink = productData[0].amazonData.UK.link;
               brand = productData[0].supBrand;
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -952,13 +949,13 @@ async function yesDetails(re) {
     '														style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">' +
     '														<span style="font-size: 18px; color: #000000;">We are happy to' +
     '															serve you. You are one step closer to buy this product.' +
-    '															Please click on below link to see lowest price part details. Have a great day!' +
+    '															Please click on below link to see lowest price part details' +
     '															of your vehicle.</span></p>' +
     '												</div>' +
     '											</div>' +
     '											<div align="center" class="button-container"' +
     '												style="padding-top:20px;padding-right:10px;padding-bottom:10px;padding-left:10px;">' +
-    '                       <a style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #fc7318; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; width: auto; width: auto; border-top: 1px solid #fc7318; border-right: 1px solid #fc7318; border-bottom: 1px solid #fc7318; border-left: 1px solid #fc7318; padding-top: 10px; padding-bottom: 10px; font-family: "Lato", Tahoma, Verdana, Segoe, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;" href="' + productLink + '" target="_blank">' +
+    '                       <a style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #fc7318; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; width: auto; width: auto; border-top: 1px solid #fc7318; border-right: 1px solid #fc7318; border-bottom: 1px solid #fc7318; border-left: 1px solid #fc7318; padding-top: 10px; padding-bottom: 10px; text-align: center; mso-border-alt: none; word-break: keep-all;" href="' + productLink + '" target="_blank">' +
     '												<span style="font-size: 16px; line-height: 32px;"><strong>START' +
     '														SHOPPING</strong></span>' +
     '												</span></a>' +
