@@ -328,6 +328,7 @@ async function getCategoryDetails(intentDetails) {
                 prod[0].lowest = lowestPrice.price;
                 productData.push(prod[0]);
                 if (productData.length == (ean.length - uIndex)) {
+                  console.log(productData[0].amazonData.UK)
                   productLink = productData[0].amazonData.UK.link;
                   brand = productData[0].supBrand;
                   productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -392,6 +393,7 @@ async function getPositionDetails(intentDetails) {
               prod[0].lowest = lowestPrice.price;
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
+                console.log(productData[0].amazonData.UK)
                 productLink = productData[0].amazonData.UK.link;
                 brand = productData[0].supBrand;
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -443,6 +445,7 @@ async function getVariantDetails(intentDetails) {
             prod[0].lowest = lowestPrice.price;
             productData.push(prod[0]);
             if (productData.length == (ean.length - uIndex)) {
+              console.log(productData[0].amazonData.UK)
               productLink = productData[0].amazonData.UK.link;
               brand = productData[0].supBrand;
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
@@ -886,6 +889,10 @@ async function yesDetails(re) {
     '											style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:25px; padding-bottom:25px; padding-right: 0px; padding-left: 25px;">' +
     '											<div align="left" class="img-container left fixedwidth"' +
     '												style="padding-right: 0px;padding-left: 0px;">' +
+    '                       <img alt="Image" border="0" class="left fixedwidth"' +
+    '                         src="https://www.comparethecarpart.com/assets/images/logo-ctcp-white.png"' +
+    '                         style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: auto; float: none; width: 100%; max-width: 195px; display: block;"' +
+    '                         title="Image" width="195" />' +
     '											</div>' +
     '										</div>' +
     '									</div>' +
@@ -945,7 +952,7 @@ async function yesDetails(re) {
     '														style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">' +
     '														<span style="font-size: 18px; color: #000000;">We are happy to' +
     '															serve you. You are one step closer to buy this product.' +
-    '															Please click on below link to see lowest price part details' +
+    '															Please click on below link to see lowest price part details. Have a great day!' +
     '															of your vehicle.</span></p>' +
     '												</div>' +
     '											</div>' +
@@ -1093,7 +1100,7 @@ async function yesDetails(re) {
     });
   });
   let result = await promise;
-  var welcomeSpeechOutput = 'We send email of lowest price part details to your email address Thank you for visiting us';
+  var welcomeSpeechOutput = 'We send email of lowest price part details to your email address ' + PAUSE + ' Thank you for visiting us' + PAUSE + 'Have a great day';
   const speechOutput = welcomeSpeechOutput;
 
   return buildResponseWithRepromt(speechOutput, true, "Over 1 million car parts available", 'try again');
