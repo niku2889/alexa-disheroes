@@ -331,9 +331,9 @@ async function getCategoryDetails(intentDetails) {
                 prod[0].lowest = lowestPrice.price;
                 productData.push(prod[0]);
                 if (productData.length == (ean.length - uIndex)) {
+                  productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                   productLink = productData[0].amazonData.UK.link;
                   brand = productData[0].supBrand;
-                  productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                   var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at '
                     + PAUSE + productData[0].lowest + PAUSE + 'pounds ' + ' Would you like to buy?';
                   const speechOutput = welcomeSpeechOutput;
@@ -396,9 +396,9 @@ async function getPositionDetails(intentDetails) {
               prod[0].lowest = lowestPrice.price;
               productData.push(prod[0]);
               if (productData.length == (ean.length - uIndex)) {
+                productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 productLink = productData[0].amazonData.UK.link;
                 brand = productData[0].supBrand;
-                productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
                   PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
                 const speechOutput = welcomeSpeechOutput;
@@ -448,9 +448,9 @@ async function getVariantDetails(intentDetails) {
             prod[0].lowest = lowestPrice.price;
             productData.push(prod[0]);
             if (productData.length == (ean.length - uIndex)) {
+              productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
               productLink = productData[0].amazonData.UK.link;
               brand = productData[0].supBrand;
-              productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
               var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
                 PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
               const speechOutput = welcomeSpeechOutput;
@@ -960,7 +960,7 @@ async function yesDetails(re) {
     '											</div>' +
     '											<div align="center" class="button-container"' +
     '												style="padding-top:20px;padding-right:10px;padding-bottom:10px;padding-left:10px;">' +
-    '                       <a style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #fc7318; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; width: auto; width: auto; border-top: 1px solid #fc7318; border-right: 1px solid #fc7318; border-bottom: 1px solid #fc7318; border-left: 1px solid #fc7318; padding-top: 10px; padding-bottom: 10px; text-align: center; mso-border-alt: none; word-break: keep-all;" href="' + productLink + '" target="_blank">' +
+    '                       <a style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #fc7318; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; width: auto; width: auto; border-top: 1px solid #fc7318; border-right: 1px solid #fc7318; border-bottom: 1px solid #fc7318; border-left: 1px solid #fc7318; padding: 10px; text-align: center; mso-border-alt: none; word-break: keep-all;" href="' + productLink + '" target="_blank">' +
     '												<span style="font-size: 16px; line-height: 32px;"><strong>START' +
     '														SHOPPING</strong></span>' +
     '												</span></a>' +
