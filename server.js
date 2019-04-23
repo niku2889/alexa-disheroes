@@ -285,6 +285,7 @@ async function getRegDetails(intentDetails) {
 
 async function getCategoryDetails(intentDetails) {
   var cate = '';
+  category = '';
   if (intentDetails.slots.categoryname.value.toString() == 'brake diks')
     cate = 'Brake Discs';
   else
@@ -319,9 +320,11 @@ async function getCategoryDetails(intentDetails) {
         let productData = [];
         var ean = laparts.toString().split('\n');
         let uIndex = 0;
+        productLink = '';
+        brand = '';
         let promise = new Promise((resolve, reject) => {
           for (var i = 0; i < ean.length; i++) {
-            Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
+            Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1, "amazonData.UK.link": 1 })
               .then(prod => {
                 uIndex += prod[0] == undefined ? 1 : 0;
                 let lowestPrice = getLowestPrice(prod[0]);
@@ -382,10 +385,11 @@ async function getPositionDetails(intentDetails) {
     if (variantCheck == '') {
       var ean = laparts.toString().split('\n');
       let uIndex = 0;
-
+      productLink = '';
+      brand = '';
       let promise = new Promise((resolve, reject) => {
         for (var i = 0; i < ean.length; i++) {
-          Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
+          Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1, "amazonData.UK.link": 1 })
             .then(prod => {
               uIndex += prod[0] == undefined ? 1 : 0;
               let lowestPrice = getLowestPrice(prod[0]);
@@ -433,10 +437,11 @@ async function getVariantDetails(intentDetails) {
     }
     var ean = laparts.toString().split('\n');
     let uIndex = 0;
-
+    productLink = '';
+    brand = '';
     let promise = new Promise((resolve, reject) => {
       for (var i = 0; i < ean.length; i++) {
-        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1,"amazonData.UK.link": 1 })
+        Product.find({ lapArtId: ean[i] }, { supBrand: 1, "amazonData.UK.price": 1, "amazonData.UK.link": 1 })
           .then(prod => {
             uIndex += prod[0] == undefined ? 1 : 0;
             let lowestPrice = getLowestPrice(prod[0]);
