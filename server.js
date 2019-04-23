@@ -924,7 +924,7 @@ async function yesDetails(re) {
     '												style="padding-right: 0px;padding-left: 0px;">' +
     '												<div style="font-size:1px;line-height:45px"> </div><img align="center"' +
     '													alt="Image" border="0" class="center fixedwidth"' +
-    '													src="https://s3.eu-west-2.amazonaws.com/carpart-images-large/illo_welcome_1.png"' +
+    '													src="https://s3.eu-west-2.amazonaws.com/carpart-images-large/comparethecarpart.png"' +
     '													style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; border: 0; height: auto; float: none; width: 100%; max-width: 540px; display: block;"' +
     '													title="Image" width="540" />' +
     '											</div>' +
@@ -961,8 +961,8 @@ async function yesDetails(re) {
     '											<div align="center" class="button-container"' +
     '												style="padding-top:20px;padding-right:10px;padding-bottom:10px;padding-left:10px;">' +
     '                       <a style="-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #fc7318; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; width: auto; width: auto; border-top: 1px solid #fc7318; border-right: 1px solid #fc7318; border-bottom: 1px solid #fc7318; border-left: 1px solid #fc7318; padding: 10px; text-align: center; mso-border-alt: none; word-break: keep-all;" href="' + productLink + '" target="_blank">' +
-    '												<span style="font-size: 16px; line-height: 32px;"><strong>START' +
-    '														SHOPPING</strong></span>' +
+    '												<span style="font-size: 16px; line-height: 32px;"><strong>VIEW' +
+    '														OFFER</strong></span>' +
     '												</span></a>' +
     '											</div>' +
     '										</div>' +
