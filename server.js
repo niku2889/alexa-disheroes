@@ -125,7 +125,6 @@ function help() {
 }
 
 async function getWelcomeMsg(re) {
-  console.log(re)
   let promise = new Promise((resolve, reject) => {
     request.get({
       url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
