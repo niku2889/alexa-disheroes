@@ -952,10 +952,9 @@ async function yesDetails(re) {
     '													style="font-size: 12px; line-height: 14px; color: #555555; font-family: \'Lato\', Tahoma, Verdana, Segoe, sans-serif;">' +
     '													<p' +
     '														style="font-size: 14px; line-height: 21px; text-align: center; margin: 0;">' +
-    '														<span style="font-size: 18px; color: #000000;">We are happy to' +
-    '															serve you. You are one step closer to buy this product.' +
-    '															Please click on below link to see lowest price part details' +
-    '															of your vehicle.</span></p>' +
+    '														<span style="font-size: 18px; color: #000000;">Thanks for using Compare The Car Part on Alexa. ' +
+    '															You are one step closer to getting the best price for this product.' +
+    '															Please click on the link below to see lowest price part details of your vehicle.</span></p>' +
     '												</div>' +
     '											</div>' +
     '											<div align="center" class="button-container"' +
