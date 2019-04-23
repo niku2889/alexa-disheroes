@@ -485,24 +485,26 @@ async function yesDetails(re) {
 
   var mail = {
     from: "voice@comparethecarpart.com",
-    to: email,
+    to: "nikunjsathwara039@gmail.com",
     subject: "Test Email - Alexa",
     text: "Test Email text",
     html: "<b>Test Email Text</b>"
   }
-
-  smtpTransport.sendMail(mail, function (error, response) {
-    if (error) {
-      console.log(error);
-    } else {
-      smtpTransport.close();
-      console.log("Message sent: " + response.message);
-      var welcomeSpeechOutput = 'We send email of lowest price part details to your email address Thank you for visiting us';
-      const speechOutput = welcomeSpeechOutput;
-
-      return buildResponseWithRepromt(speechOutput, true, "Over 1 million car parts available", 'try again');
-    }
+  let promise = new Promise((resolve, reject) => {
+    smtpTransport.sendMail(mail, function (error, response) {
+      if (error) {
+        resolve(true);
+      } else {
+        smtpTransport.close();
+        resolve(true);
+      }
+    });
   });
+  let result = await promise;
+  var welcomeSpeechOutput = 'We send email of lowest price part details to your email address Thank you for visiting us';
+  const speechOutput = welcomeSpeechOutput;
+
+  return buildResponseWithRepromt(speechOutput, true, "Over 1 million car parts available", 'try again');
 }
 
 function buildResponse(speechText, shouldEndSession, cardText) {
