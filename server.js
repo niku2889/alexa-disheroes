@@ -149,7 +149,7 @@ async function getWelcomeMsg(re) {
 
   console.log(JSON.parse(result.body))
   if (result == false) {
-    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
+    var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address and full name. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
     const speechOutput = welcomeSpeechOutput;
     const more = welcomeSpeechOutput;
 
@@ -158,7 +158,7 @@ async function getWelcomeMsg(re) {
     let jres = JSON.parse(result.body);
     console.log(jres.code)
     if (jres.code == "ACCESS_DENIED") {
-      var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
+      var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address and full name. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
       const speechOutput = welcomeSpeechOutput;
       const more = welcomeSpeechOutput;
 
@@ -1166,22 +1166,23 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
     "response": {
       "shouldEndSession": shouldEndSession,
       "outputSpeech": {
-        "type": "PlainText",
+        "type": "SSML",
+        "ssml": speechOutput,
         "text": speechText
       },
-    },
-    "card": {
-      "type": "AskForPermissionsConsent",
-      "permissions": [
-        "alexa::profile:name:read",
-        "alexa::profile:email:read"
-      ]
-    },
-    "reprompt": {
-      "outputSpeech": {
-        "type": "PlainText",
-        "text": reprompt,
-        "ssml": reprompt
+      "card": {
+        "type": "AskForPermissionsConsent",
+        "permissions": [
+          "alexa::profile:name:read",
+          "alexa::profile:email:read"
+        ]
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": reprompt,
+          "ssml": reprompt
+        }
       }
     }
   }
@@ -1201,17 +1202,18 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
         "ssml": speechOutput,
         "text": speechText
       },
-    }, "card": {
-      "type": "Simple",
-      "title": SKILL_NAME,
-      "content": cardText,
-      "text": cardText
-    },
-    "reprompt": {
-      "outputSpeech": {
-        "type": "PlainText",
-        "text": reprompt,
-        "ssml": reprompt
+      "card": {
+        "type": "Simple",
+        "title": SKILL_NAME,
+        "content": cardText,
+        "text": cardText
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "type": "PlainText",
+          "text": reprompt,
+          "ssml": reprompt
+        }
       }
     }
   }
