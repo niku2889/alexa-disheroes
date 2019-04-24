@@ -140,14 +140,11 @@ async function getWelcomeMsg(re) {
       if (error) {
         resolve(false);
       } else {
-        console.log(response)
         resolve(response);
       }
     });
   });
   let result = await promise;
-
-  console.log(JSON.parse(result.body))
   if (result == false) {
     var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address and full name. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
     const speechOutput = welcomeSpeechOutput;
@@ -156,7 +153,6 @@ async function getWelcomeMsg(re) {
     return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
   } else {
     let jres = JSON.parse(result.body);
-    console.log(jres.code)
     if (jres.code == "ACCESS_DENIED") {
       var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address and full name. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
       const speechOutput = welcomeSpeechOutput;
@@ -195,7 +191,6 @@ async function getWelcomeMsg(re) {
 }
 
 async function getRegDetails(intentDetails) {
-  console.log(intentDetails.slots.registrationnumber.value)
   let s = intentDetails.slots.registrationnumber.value.toString().split(' ');
   let finalS = '';
   for (var i = 0; i < s.length; i++) {
@@ -214,8 +209,6 @@ async function getRegDetails(intentDetails) {
     }
     finalS += s[i];
   }
-  console.log(s)
-  console.log(finalS)
 
   ktype = '';
   let promise = new Promise((resolve, reject) => {
@@ -274,7 +267,6 @@ async function getRegDetails(intentDetails) {
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE);
     } else {
       if (res1) {
-        console.log(res1)
         let envelope = res1['soap:Envelope']['soap:Body'];
         if (envelope.length > 0) {
           let error = envelope[0]['soap:Fault'];
@@ -1186,7 +1178,6 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
       }
     }
   }
-  console.log(jsonObj)
   return jsonObj
 }
 
@@ -1217,7 +1208,6 @@ function buildResponseWithRepromt(speechText, shouldEndSession, cardText, reprom
       }
     }
   }
-  console.log(jsonObj)
   return jsonObj
 }
 
