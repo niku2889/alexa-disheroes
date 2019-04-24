@@ -155,7 +155,9 @@ async function getWelcomeMsg(re) {
 
     return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
   } else {
-    if (result.body.code == "ACCESS_DENIED") {
+    let jres = JSON.parse(result.body);
+    console.log(jres.code)
+    if (jres.code == "ACCESS_DENIED") {
       var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
       const speechOutput = welcomeSpeechOutput;
       const more = welcomeSpeechOutput;
