@@ -170,8 +170,8 @@ async function getWelcomeMsg(re) {
       });
     });
     let result1 = await promise1;
-    name = result1 == false ? '' : result1.body.toString();
-
+    name = result1 == false ? 'Guest' : result1.body.toString().replace('"', "");
+    console.log(name)
     var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
       ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
@@ -961,7 +961,7 @@ async function yesDetails(re) {
     '														style="font-size: 14px; line-height: 51px; text-align: center; margin: 0;">' +
     '														<span style="font-size: 34px;"><strong><span' +
     '																	style="line-height: 51px; font-size: 34px;"><span' +
-    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">Guest</span></span></strong></span>' +
+    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">' + name + '</span></span></strong></span>' +
     '													</p>' +
     '												</div>' +
     '											</div>' +
