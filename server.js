@@ -961,7 +961,7 @@ async function yesDetails(re) {
     '														style="font-size: 14px; line-height: 51px; text-align: center; margin: 0;">' +
     '														<span style="font-size: 34px;"><strong><span' +
     '																	style="line-height: 51px; font-size: 34px;"><span' +
-    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">' + name == '' ? "Guest" : name + '</span></span></strong></span>' +
+    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">Guest</span></span></strong></span>' +
     '													</p>' +
     '												</div>' +
     '											</div>' +
