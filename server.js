@@ -21,6 +21,7 @@ let dbURL = 'mongodb://myiqisltd:ALAN2889@ds151834-a0.mlab.com:51834,ds151834-a1
 var ktype;
 var masterData;
 var email;
+var name;
 var productLink;
 var category;
 var brand;
@@ -149,11 +150,29 @@ async function getWelcomeMsg(re) {
   if (result == false) {
     var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
     const speechOutput = welcomeSpeechOutput;
-    const more = '';
+    const more = welcomeSpeechOutput;
 
     return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
   } else {
-    var welcomeSpeechOutput = 'Welcome to compare the car part dot com <break time="0.3s" />'
+    let promise1 = new Promise((resolve, reject) => {
+      request.get({
+        url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.name",
+        headers: {
+          "Authorization": "Bearer " + re.context.System.apiAccessToken,
+          "Accept": "application/json"
+        }
+      }, function (error, response, body) {
+        if (error) {
+          resolve(false);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+    let result1 = await promise1;
+    name = result1 == false ? '' : result1.body;
+
+    var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
       ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
       + 'o' + PAUSE + 'p';
@@ -942,7 +961,7 @@ async function yesDetails(re) {
     '														style="font-size: 14px; line-height: 51px; text-align: center; margin: 0;">' +
     '														<span style="font-size: 34px;"><strong><span' +
     '																	style="line-height: 51px; font-size: 34px;"><span' +
-    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">Guest</span></span></strong></span>' +
+    '																		style="color: #2190e3; line-height: 51px; font-size: 34px;">' + name == '' ? Guest : name + '</span></span></strong></span>' +
     '													</p>' +
     '												</div>' +
     '											</div>' +
