@@ -145,7 +145,7 @@ async function getWelcomeMsg(re) {
     });
   });
   let result = await promise;
-  email = result.body;
+
   console.log(email)
   if (result == false) {
     var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
@@ -154,32 +154,41 @@ async function getWelcomeMsg(re) {
 
     return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
   } else {
-    let promise1 = new Promise((resolve, reject) => {
-      request.get({
-        url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.name",
-        headers: {
-          "Authorization": "Bearer " + re.context.System.apiAccessToken,
-          "Accept": "application/json"
-        }
-      }, function (error, response, body) {
-        if (error) {
-          resolve(false);
-        } else {
-          resolve(response);
-        }
-      });
-    });
-    let result1 = await promise1;
-    name = result1 == false ? 'Guest' : result1.body.toString().replace(/"/g, "");
-    console.log(name)
-    var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
-    const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-      ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
-      + 'o' + PAUSE + 'p';
-    const speechOutput = welcomeSpeechOutput + tempOutput;
-    const more = ' Registration number is w one one one b o p';
+    if (result.body.code == "ACCESS_DENIED") {
+      var welcomeSpeechOutput = 'In order to email you lowest price part details, compare the car part will need access to your email address. Go to the home screen in your Alexa app and grant me permissions and try again. <break time="0.3s" />'
+      const speechOutput = welcomeSpeechOutput;
+      const more = welcomeSpeechOutput;
 
-    return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
+      return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
+    } else {
+      email = result.body;
+      let promise1 = new Promise((resolve, reject) => {
+        request.get({
+          url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.name",
+          headers: {
+            "Authorization": "Bearer " + re.context.System.apiAccessToken,
+            "Accept": "application/json"
+          }
+        }, function (error, response, body) {
+          if (error) {
+            resolve(false);
+          } else {
+            resolve(response);
+          }
+        });
+      });
+      let result1 = await promise1;
+      name = result1 == false ? 'Guest' : result1.body.toString().replace(/"/g, "");
+      console.log(name)
+      var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
+      const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
+        ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
+        + 'o' + PAUSE + 'p';
+      const speechOutput = welcomeSpeechOutput + tempOutput;
+      const more = ' Registration number is w one one one b o p';
+
+      return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
+    }
   }
 }
 
