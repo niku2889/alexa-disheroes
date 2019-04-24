@@ -1105,7 +1105,7 @@ async function yesDetails(re) {
 
   var mail = {
     from: "voice@comparethecarpart.com",
-    to: email,
+    to: "nikunjsathwara039@gmail.com",
     subject: "Compare the car part - " + brand + ' - ' + category,
     html: emailTemplate
   }
