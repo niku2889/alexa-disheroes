@@ -170,7 +170,7 @@ async function getWelcomeMsg(re) {
       });
     });
     let result1 = await promise1;
-    name = result1 == false ? 'Guest' : result1.body.toString().replace('"', "");
+    name = result1 == false ? 'Guest' : result1.body.toString().replace(/"/g, "");
     console.log(name)
     var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
     const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
