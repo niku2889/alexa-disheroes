@@ -162,7 +162,7 @@ async function getWelcomeMsg(re) {
       const speechOutput = welcomeSpeechOutput;
       const more = welcomeSpeechOutput;
 
-      return buildResponseWithPermission(speechOutput, false, "Over 1 million car parts available", more);
+      return buildResponseWithPermission(speechOutput, true, "Over 1 million car parts available", more);
     } else {
       email = result.body;
       let promise1 = new Promise((resolve, reject) => {
@@ -1167,8 +1167,7 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
       "response": {
         "shouldEndSession": shouldEndSession,
         "outputSpeech": {
-          "type": "SSML",
-          "ssml": speechOutput,
+          "type": "PlainText",
           "text": speechText
         },
       },
