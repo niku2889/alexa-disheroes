@@ -1164,26 +1164,24 @@ function buildResponseWithPermission(speechText, shouldEndSession, cardText, rep
   var jsonObj = {
     "version": "1.0",
     "response": {
-      "response": {
-        "shouldEndSession": shouldEndSession,
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": speechText
-        },
+      "shouldEndSession": shouldEndSession,
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": speechText
       },
-      "card": {
-        "type": "AskForPermissionsConsent",
-        "permissions": [
-          "alexa::profile:name:read",
-          "alexa::profile:email:read"
-        ]
-      },
-      "reprompt": {
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": reprompt,
-          "ssml": reprompt
-        }
+    },
+    "card": {
+      "type": "AskForPermissionsConsent",
+      "permissions": [
+        "alexa::profile:name:read",
+        "alexa::profile:email:read"
+      ]
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": reprompt,
+        "ssml": reprompt
       }
     }
   }
