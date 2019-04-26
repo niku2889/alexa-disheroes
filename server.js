@@ -356,7 +356,7 @@ async function getCategoryDetails(intentDetails) {
                   productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                   productLink = productData[0].amazonData.UK.link;
                   brand = productData[0].supBrand;
-                  const speechOutput;
+                  var speechOutput;
                   if (productData[0].lowest == 'NA') {
                     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say ' +
                       PAUSE + 'category is' + PAUSE + 'air filters' + PAUSE + 'which other category would you like?';
@@ -429,6 +429,7 @@ async function getPositionDetails(intentDetails) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 productLink = productData[0].amazonData.UK.link;
                 brand = productData[0].supBrand;
+                var speechOutput;
                 if (productData[0].lowest == 'NA') {
                   var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' position ' + PAUSE + 'category is ' + PAUSE + 'air filters ' + PAUSE + 'which other category would you like?';;
 
@@ -488,6 +489,7 @@ async function getVariantDetails(intentDetails) {
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
               productLink = productData[0].amazonData.UK.link;
               brand = productData[0].supBrand;
+              var speechOutput;
               if (productData[0].lowest == 'NA') {
                 var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other variant would you like?';
 
