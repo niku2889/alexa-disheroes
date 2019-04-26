@@ -12,7 +12,7 @@ var async = require('async');
 var request = require('request');
 const SKILL_NAME = 'Compare the car part';
 const HELP_REPROMPT = 'How can I help you with?';
-const STOP_MESSAGE = 'Enjoy the day...Goodbye!';
+const STOP_MESSAGE = 'Thanks for visiting compare the car part Enjoy the day...Goodbye!';
 const MORE_MESSAGE = 'which category would you like?'
 const MORE_MESSAGE1 = 'what would you like?'
 const PAUSE = '<break time="0.3s" />'
@@ -129,6 +129,13 @@ function help() {
 }
 
 async function getWelcomeMsg(re) {
+  ktype = '';
+  masterData = [];
+  email = '';
+  name = '';
+  productLink = '';
+  category = '';
+  brand = '';
   let promise = new Promise((resolve, reject) => {
     request.get({
       url: re.context.System.apiEndpoint + "/v2/accounts/~current/settings/Profile.email",
