@@ -399,7 +399,8 @@ async function getCategoryDetails(intentDetails) {
     }
   } else {
     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say ' +
-      PAUSE + 'registration number is' + PAUSE + 'w one one one b o p';
+      PAUSE + 'registration number is' + PAUSE  + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
+      + 'o' + PAUSE + 'p';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'registration number is w one one one b o p');
@@ -519,7 +520,7 @@ async function getVariantDetails(intentDetails) {
     return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
 
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other variant would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE +  'you can say' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other variant would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other variant would you like?');
