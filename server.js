@@ -356,9 +356,17 @@ async function getCategoryDetails(intentDetails) {
                   productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                   productLink = productData[0].amazonData.UK.link;
                   brand = productData[0].supBrand;
-                  var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at '
-                    + PAUSE + productData[0].lowest + PAUSE + 'pounds ' + ' Would you like to buy?';
-                  const speechOutput = welcomeSpeechOutput;
+                  const speechOutput;
+                  if (productData[0].lowest == 'NA') {
+                    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say ' +
+                      PAUSE + 'category is' + PAUSE + 'air filters' + PAUSE + 'which other category would you like?';
+
+                    speechOutput = welcomeSpeechOutput;
+                  } else {
+                    var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
+                      PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
+                    speechOutput = welcomeSpeechOutput;
+                  }
                   resolve(speechOutput);
                 }
               }).catch(err => {
@@ -421,9 +429,16 @@ async function getPositionDetails(intentDetails) {
                 productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
                 productLink = productData[0].amazonData.UK.link;
                 brand = productData[0].supBrand;
-                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
-                  PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
-                const speechOutput = welcomeSpeechOutput;
+                if (productData[0].lowest == 'NA') {
+                  var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' position ' + PAUSE + 'category is ' + PAUSE + 'air filters ' + PAUSE + 'which other category would you like?';;
+
+                  speechOutput = welcomeSpeechOutput;
+                } else {
+                  var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
+                    PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
+
+                  speechOutput = welcomeSpeechOutput;
+                }
                 resolve(speechOutput);
               }
             }).catch(err => {
@@ -435,13 +450,13 @@ async function getPositionDetails(intentDetails) {
       let result = await promise;
       return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
     } else {
-      var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following varients available - ' + variant + PAUSE + ' ' + 'you can say ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + MORE_MESSAGE1;
+      var welcomeSpeechOutput = intentDetails.slots.position.value.toString() + ' have the following variant available - ' + variant + PAUSE + ' ' + 'you can say ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + MORE_MESSAGE1;
       const speechOutput = welcomeSpeechOutput;
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
     }
   } else {
-    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' varient ' + PAUSE + 'category is ' + PAUSE + 'air filters ' + PAUSE + 'which other category would you like?';
+    var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.position.value + ' position ' + PAUSE + 'you can say' + PAUSE + 'front please' + PAUSE + 'which other position would you like?';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'which other category would you like?');
@@ -473,9 +488,16 @@ async function getVariantDetails(intentDetails) {
               productData.sort((a, b) => (a.lowest == 'NA' ? 10000 : a.lowest) - (b.lowest == 'NA' ? 10000 : b.lowest));
               productLink = productData[0].amazonData.UK.link;
               brand = productData[0].supBrand;
-              var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
-                PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
-              const speechOutput = welcomeSpeechOutput;
+              if (productData[0].lowest == 'NA') {
+                var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.variantname.value + ' varient ' + PAUSE + 'variant is' + PAUSE + 'solid' + PAUSE + 'which other variant would you like?';
+
+                speechOutput = welcomeSpeechOutput;
+              } else {
+                var welcomeSpeechOutput = 'The following ' + PAUSE + productData[0].supBrand + PAUSE + ' is available at the cheapest price at ' +
+                  PAUSE + productData[0].lowest + PAUSE + 'pounds ' + PAUSE + 'you can say ' + PAUSE + 'yes' + PAUSE + 'or' + PAUSE + 'no' + PAUSE + ' Would you like to buy?';
+
+                speechOutput = welcomeSpeechOutput;
+              }
               resolve(speechOutput);
             }
           }).catch(err => {
