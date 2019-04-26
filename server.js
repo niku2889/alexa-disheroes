@@ -378,7 +378,7 @@ async function getCategoryDetails(intentDetails) {
         let result = await promise;
         return buildResponseWithRepromt(result, false, "Over 1 million car parts available", 'Would you like to buy?');
       } else {
-        var welcomeSpeechOutput = location + PAUSE + ' ' + 'you can say' + PAUSE + 'front please' + PAUSE + MORE_MESSAGE1;
+        var welcomeSpeechOutput = 'In ' + intentDetails.slots.categoryname.value + ' category we have the following position available' + PAUSE + location + PAUSE + ' ' + ' you can say ' + PAUSE + 'front please ' + PAUSE + MORE_MESSAGE1;
         const speechOutput = welcomeSpeechOutput;
 
         return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", MORE_MESSAGE1);
