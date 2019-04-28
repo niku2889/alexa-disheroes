@@ -118,8 +118,8 @@ function stopAndExit() {
 }
 
 function help() {
-  const speechOutput = 'You can say ' + PAUSE + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE +
-    'b' + PAUSE + 'o' + PAUSE + 'p' + PAUSE
+  const speechOutput = 'You can say ' + PAUSE + ' Registration number is ' + PAUSE + 'l' + PAUSE + 'x' + PAUSE + 'five' + PAUSE + 'two' + PAUSE +
+    'h' + PAUSE + 'r' + PAUSE + 'm' + PAUSE
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'category is air filters'
     + ' or ' + PAUSE + 'You can say ' + PAUSE + 'Exit' + PAUSE + ' How can I help you with?';
   const reprompt = HELP_REPROMPT
@@ -187,10 +187,10 @@ async function getWelcomeMsg(re) {
       name = result1 == false ? 'Guest' : result1.body.toString().replace(/"/g, "");
       var welcomeSpeechOutput = 'Welcome ' + name + ' to compare the car part dot com <break time="0.3s" />'
       const tempOutput = WHISPER + "Please tell me your vehicle registration number" + PAUSE +
-        ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
-        + 'o' + PAUSE + 'p';
+        ' you can say ' + PAUSE + WHISPER + ' Registration number is ' + PAUSE + 'l' + PAUSE + 'x' + PAUSE + 'five' + PAUSE + 'two' + PAUSE + 'h' + PAUSE
+        + 'r' + PAUSE + 'm';
       const speechOutput = welcomeSpeechOutput + tempOutput;
-      const more = ' Registration number is w one one one b o p';
+      const more = ' Registration number is l x five two h r m';
 
       return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", more);
     }
@@ -399,8 +399,8 @@ async function getCategoryDetails(intentDetails) {
     }
   } else {
     var welcomeSpeechOutput = 'No parts available in ' + intentDetails.slots.categoryname.value + ' category ' + PAUSE + ' ' + 'you can say ' +
-      PAUSE + 'registration number is' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'b' + PAUSE
-      + 'o' + PAUSE + 'p';
+      PAUSE + 'registration number is' + PAUSE + 'l' + PAUSE + 'x' + PAUSE + 'five' + PAUSE + 'two' + PAUSE + 'h' + PAUSE
+      + 'r' + PAUSE + 'm';
     const speechOutput = welcomeSpeechOutput;
 
     return buildResponseWithRepromt(speechOutput, false, "Over 1 million car parts available", 'registration number is w one one one b o p');
@@ -1161,8 +1161,8 @@ async function yesDetails(re) {
 
     return buildResponseWithRepromt(speechOutput, true, "Over 1 million car parts available", 'try again');
   } else {
-    const speechOutput = 'You can say ' + PAUSE + ' Registration number is ' + PAUSE + 'w' + PAUSE + 'one' + PAUSE + 'one' + PAUSE + 'one' + PAUSE +
-      'b' + PAUSE + 'o' + PAUSE + 'p' + PAUSE
+    const speechOutput = 'You can say ' + PAUSE + ' Registration number is ' + PAUSE + 'l' + PAUSE + 'x' + PAUSE + 'five' + PAUSE + 'two' + PAUSE +
+      'h' + PAUSE + 'r' + PAUSE + 'm' + PAUSE
       + ' or ' + PAUSE + 'You can say ' + PAUSE + 'category is air filters'
       + ' or ' + PAUSE + 'You can say ' + PAUSE + 'Exit';
     const reprompt = HELP_REPROMPT
